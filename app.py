@@ -12,5 +12,5 @@ def get_db_connection():
         host=os.getenv("DB_HOST", "localhost"),
         user=os.getenv("DB_USER", "root"),
         password=os.getenv("DB_PASSWORD"),
-        database=os.getenv("DB_NAME", "club_deportivo")
+        database=os.getenv("DB_NAME", "Club_Deportivo")
     )
