@@ -79,7 +79,7 @@ echo ""
 echo "Asegurate de tener la base de datos MySQL corriendo:"
 echo "  docker compose up -d"
 echo ""
-echo "Iniciando la aplicación en 0.0.0.0:8080..."
+echo "Iniciando la aplicación"
 echo ""
 
 python app.py
