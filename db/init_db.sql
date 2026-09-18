@@ -12,7 +12,7 @@ CREATE TABLE Deportes (
 
 CREATE TABLE Canchas (
     id_cancha int PRIMARY KEY,
-    idDeporte int,
+    id_deporte int,
     nombre_cancha varchar(20),
     Disponibilidad boolean, -- si alguien la reservo o no
     precio_hora int,
@@ -20,6 +20,8 @@ CREATE TABLE Canchas (
     Activa boolean DEFAULT true, -- si se puede usar o no 
     Horario_inicio Time, -- ver
     Horario_fin Time -- ver
+
+    FOREIGN KEY (id_deporte) REFERENCES Deportes(id)
 );
 
 
@@ -37,6 +39,8 @@ CREATE TABLE Reservas (
     estado varchar(20),
     fecha_desde DATETIME,
     fecha_hasta DATETIME,
+    precio_hora INT,
+    precio_total INT,
 
 
     FOREIGN KEY (id_socio) REFERENCES Socios(id_socio),
@@ -44,19 +48,22 @@ CREATE TABLE Reservas (
 );
 
 
-INSERT INTO Socios (nombre, mail, activo) VALUES
-    ('Marani,Baltazar',  'Perez'),
-    ('Maria', 'Garcia'),
-    ('Pedro', 'Lopez');
+INSERT INTO Socios (nombre, mail) VALUES
+    ('Marani, Baltazar',  'bmarani@fi.uba.ar'),
+    ('Daglio, Cristian', 'cdaglio@fi.ub.ar'),
+    ('Piccicacco, Leandro', 'lpiccicacco@fi.uba.ar'),
+    ('Roberti, Gaston', 'groberti@fi.uba.ar'),
+    ('Hernandez, Lucia', 'lhernandez@fi.uba.ar'),
+    ('Blazek, Alexis', 'ablazek@fi.uba.ar'),
+    ('Perata, Agustin', 'aperata@fi.uba.ar');
 
-INSERT INTO materias (codigo, nombre, carrera) VALUES
-    ('TB022', 'IDS',         'Informatica'),
-    ('TB021', 'Fundamentos', 'Informatica');
 
-INSERT INTO notas (padron, codigo_materia, nota, fecha) VALUES
-    (1, 'TB022', 9, '2023-03-01'),
-    (1, 'TB021', 7, '2023-03-02'),
-    (2, 'TB022', 9, '2023-03-01'),
-    (2, 'TB021', 7, '2023-03-02'),
-    (3, 'TB022', 5, '2023-03-01'),
-    (3, 'TB021', 5, '2023-03-02');
+INSERT INTO Canchas
+(idDeporte, nombre_cancha, disponibilidad, precio_hora, Techada, Activa, Horario_inicio, Horario_fin)
+VALUES
+    (1, 'Cancha Fútbol 1', true, 8000, false, true, '08:00:00', '23:00:00'),
+    (1, 'Cancha Fútbol 2', true, 8000, true, true, '08:00:00', '23:00:00'),
+    (2, 'Cancha Tenis 1', true, 5000, false, true, '08:00:00', '23:00:00'),
+    (2, 'Cancha Tenis 2', false, 5000, false, true, '08:00:00', '23:00:00'),
+    (4, 'Cancha Pádel 1', true, 7000, true, true, '08:00:00', '23:00:00');
+
