@@ -1,9 +1,9 @@
 -- OREGUNTAR SI HACE FALTA PONER CREATE...EXIXST PARA CADA TABLA
 -- VER FRANJA HORARIA
 --DROP DATABASE IF exists club_Deportivo;
-CREATE DATABASE IF NOT EXISTS club_Deportivo;
+CREATE DATABASE IF NOT EXISTS Club_Deportivo;
 
-USE club_Deportivo;
+USE Club_Deportivo;
 
 CREATE TABLE Deportes (
 	id INT AUTO_INCREMENT PRIMARY KEY,
@@ -44,3 +44,19 @@ CREATE TABLE Reservas (
 );
 
 
+INSERT INTO Socios (nombre, mail, activo) VALUES
+    ('Marani,Baltazar',  'Perez'),
+    ('Maria', 'Garcia'),
+    ('Pedro', 'Lopez');
+
+INSERT INTO materias (codigo, nombre, carrera) VALUES
+    ('TB022', 'IDS',         'Informatica'),
+    ('TB021', 'Fundamentos', 'Informatica');
+
+INSERT INTO notas (padron, codigo_materia, nota, fecha) VALUES
+    (1, 'TB022', 9, '2023-03-01'),
+    (1, 'TB021', 7, '2023-03-02'),
+    (2, 'TB022', 9, '2023-03-01'),
+    (2, 'TB021', 7, '2023-03-02'),
+    (3, 'TB022', 5, '2023-03-01'),
+    (3, 'TB021', 5, '2023-03-02');
