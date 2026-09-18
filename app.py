@@ -1,14 +1,16 @@
-# .\venv\Scripts\Activate.ps1 --> activar el entorno
+from flask import Flask, jsonify
+from dotenv import load_dotenv
+import mysql.connector
+import os
 
-from flask import Flask
+load_dotenv()
 
 app = Flask(__name__)
 
-# Definimos la ruta/endpoint “/” (la raíz de nuestra API)
-@app.route("/")
-
-def index():
- return "¡Hola mundo!" # esta es la "response" (respuesta) del endpoint
-# Configuramos el servidor Web para que se ejecute en el puerto 8080
-if __name__ == '__main__':
- app.run(port=8080, debug=True)
+def get_db_connection():
+    return mysql.connector.connect(
+        host=os.getenv("DB_HOST", "localhost"),
+        user=os.getenv("DB_USER", "root"),
+        password=os.getenv("DB_PASSWORD"),
+        database=os.getenv("DB_NAME", "club_deportivo")
+    )
