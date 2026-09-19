@@ -1,23 +1,10 @@
-import os
 from flask import Flask, jsonify
-from dotenv import load_dotenv
-import mysql.connector
+from club_deportivo__encuentro.constants import BASE_URL
 
-load_dotenv()
-
-app = Flask(__name__)
-
-def get_db_connection():
-    return mysql.connector.connect(
-        host=os.getenv("DB_HOST", "localhost"),
-        user=os.getenv("DB_USER", "root"),
-        password=os.getenv("DB_PASSWORD", "root"),
-        database=os.getenv("DB_NAME", "Club_Deportivo"),
-        port=int(os.getenv("DB_PORT", 3306))
-    )
-    
-app.register_blueprint(alumnos_bp, url_prefix=BASE_URL)
-app.register_blueprint(materias_bp, url_prefix=BASE_URL)
+app.register_blueprint(socios_bp, url_prefix=BASE_URL)
+app.register_blueprint(deportes_bp, url_prefix=BASE_URL)
+app.register_blueprint(canchas_bp, url_prefix=BASE_URL)
+app.register_blueprint(reservas_bp, url_prefix=BASE_URL)
 
 @app.route("/")
 def ping():
