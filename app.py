@@ -15,6 +15,9 @@ def get_db_connection():
         database=os.getenv("DB_NAME", "Club_Deportivo"),
         port=int(os.getenv("DB_PORT", 3306))
     )
+    
+app.register_blueprint(alumnos_bp, url_prefix=BASE_URL)
+app.register_blueprint(materias_bp, url_prefix=BASE_URL)
 
 @app.route("/")
 def ping():
