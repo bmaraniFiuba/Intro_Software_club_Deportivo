@@ -1,5 +1,7 @@
 from flask import Flask, jsonify
-from club_deportivo__encuentro.constants import BASE_URL
+from club_deportivo_encuentro.constants import BASE_URL
+
+app = Flask(__name__)
 
 app.register_blueprint(socios_bp, url_prefix=BASE_URL)
 app.register_blueprint(deportes_bp, url_prefix=BASE_URL)
