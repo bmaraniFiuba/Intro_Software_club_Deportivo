@@ -8,9 +8,9 @@ USE Club_Deportivo;
 -- TABLA DEPORTES
 -- =========================
 
-CREATE TABLE Deportes (
+CREATE TABLE deportes (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    deporte VARCHAR(50)
+    nombre VARCHAR(50) NOT NULL
 );
 
 
@@ -18,18 +18,15 @@ CREATE TABLE Deportes (
 -- TABLA CANCHAS
 -- =========================
 
-CREATE TABLE Canchas (
-    id_cancha INT AUTO_INCREMENT PRIMARY KEY,
-    id_deporte INT,
-    nombre_cancha VARCHAR(20),
-    disponibilidad BOOLEAN,
-    precio_hora INT,
-    Techada BOOLEAN DEFAULT false,
-    Activa BOOLEAN DEFAULT true,
-    Horario_inicio TIME,
-    Horario_fin TIME,
+CREATE TABLE canchas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_deporte INT NOT NULL,
+    nombre VARCHAR(30) NOT NULL,
+    precio_hora INT NOT NULL,
+    techada BOOLEAN NOT NULL DEFAULT FALSE,
+    activa BOOLEAN NOT NULL DEFAULT TRUE,
 
-    FOREIGN KEY (id_deporte) REFERENCES Deportes(id)
+    FOREIGN KEY (id_deporte) REFERENCES deportes(id)
 );
 
 
@@ -37,11 +34,11 @@ CREATE TABLE Canchas (
 -- TABLA SOCIOS
 -- =========================
 
-CREATE TABLE Socios (
-    id_socio INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(50),
-    mail VARCHAR(50),
-    activo BOOLEAN DEFAULT true
+CREATE TABLE socios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL,
+    email VARCHAR(50) NOT NULL UNIQUE,
+    activo BOOLEAN NOT NULL DEFAULT true
 );
 
 
@@ -49,18 +46,18 @@ CREATE TABLE Socios (
 -- TABLA RESERVAS
 -- =========================
 
-CREATE TABLE Reservas (
-    numero_reserva INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE reservas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
     id_socio INT,
     id_cancha INT,
-    estado VARCHAR(20),
-    fecha_desde DATETIME,
-    fecha_hasta DATETIME,
-    precio_hora INT,
-    precio_total INT,
+    estado VARCHAR(30),
+    fecha_hora_inicio DATETIME NOT NULL,
+    fecha_hora_fin DATETIME NOT NULL,
+    precio_hora INT NOT NULL,
+    precio_total INT NOT NULL,
 
-    FOREIGN KEY (id_socio) REFERENCES Socios(id_socio),
-    FOREIGN KEY (id_cancha) REFERENCES Canchas(id_cancha)
+    FOREIGN KEY (id_socio) REFERENCES socios(id),
+    FOREIGN KEY (id_cancha) REFERENCES canchas(id)
 );
 
 
@@ -68,10 +65,9 @@ CREATE TABLE Reservas (
 -- INSERTAR DEPORTES
 -- =========================
 
-INSERT INTO Deportes (deporte) VALUES
+INSERT INTO deportes (deporte) VALUES
     ('Fútbol'),
     ('Tenis'),
-    ('Básquet'),
     ('Pádel');
 
 
@@ -79,7 +75,7 @@ INSERT INTO Deportes (deporte) VALUES
 -- INSERTAR SOCIOS
 -- =========================
 
-INSERT INTO Socios (nombre, mail) VALUES
+INSERT INTO socios (nombre, mail) VALUES
     ('Marani, Baltazar', 'bmarani@fi.uba.ar'),
     ('Daglio, Cristian', 'cdaglio@fi.ub.ar'),
     ('Piccicacco, Leandro', 'lpiccicacco@fi.uba.ar'),
@@ -93,7 +89,7 @@ INSERT INTO Socios (nombre, mail) VALUES
 -- INSERTAR CANCHAS
 -- =========================
 
-INSERT INTO Canchas
+INSERT INTO canchas
 (id_deporte, nombre_cancha, disponibilidad, precio_hora, Techada, Activa, Horario_inicio, Horario_fin)
 VALUES
     (1, 'Cancha Fútbol 1', true, 8000, false, true, '08:00:00', '23:00:00'),
