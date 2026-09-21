@@ -1,3 +1,19 @@
+## Integrantes
+-Gaston Roberti
+-Leandro Piccicacco
+-Lucía Hernández Tamagno
+-Tiago Elias Melilli
+-Alexis Martin Blazek
+-Agustín Perata
+-Cristian Nahuel Daglio
+-Juan Francisco Skanata
+-
+
+
+
+
+
+
 ## Requisitos previos
 
 * Tener instalado Docker y Docker Compose en el equipo.
