@@ -25,3 +25,9 @@ ERROR_CODE_INVALID_MIN_VALUE   = 'invalid.min.value'
 ERROR_CODE_INVALID_MAX_VALUE   = 'invalid.max.value'
 ERROR_CODE_ALUMNO_NOT_FOUND    = 'alumno.not.found'
 ERROR_CODE_MATERIA_NOT_FOUND   = 'materia.not.found'
+
+# Horarios de atención y duración
+HORA_APERTURA = 8
+HORA_CIERRE = 23
+DURACION_MINIMA_HORAS = 1
+DURACION_MAXIMA_HORAS = 3
