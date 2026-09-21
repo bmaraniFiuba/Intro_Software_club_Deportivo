@@ -1,4 +1,4 @@
-from club_deportivo__encuentro.db import ejecutar_consulta
+from club_deportivo_encuentro.db import ejecutar_consulta
 
 
 def obtener_reservas (filtros: dict, offset:int, limit:int) -> list[dict]:
@@ -38,10 +38,10 @@ def obtener_reservas (filtros: dict, offset:int, limit:int) -> list[dict]:
             if condicion < len(cond) - 1: ## si no es el ultimo elemento de la lista, etra a este if
                 where += ' AND '
     
-        SQL = f"SELECT * FROM reservas {where} ORDER BY id LIMIT :limit OFFSET :offset"
+        SQL = f"SELECT * FROM reservas {where} ORDER BY id ASC LIMIT :limit OFFSET :offset" #ordena por id de menor a mayor
         #cuando esta funcion recibe limit y offset como parámetros, ya le llegan validados y con su valor definitivo
         query_params["limit"] = limit
         query_params["offset"] = offset 
-    return (SQL, query_params) # sqlalchemy agarra :id_socio y lo relaciona con ej "id_socio": 5
+        
+    return ejecutar_consulta(SQL, query_params) # sqlalchemy agarra :id_socio y lo relaciona con ej "id_socio": 5
     
-                

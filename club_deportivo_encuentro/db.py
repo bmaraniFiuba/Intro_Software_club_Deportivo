@@ -16,3 +16,4 @@ def ejecutar_escritura(sql: str, params: dict = None) -> int:
     with motor.begin() as conexion:
         resultado = conexion.execute(text(sql), params or {})
         return resultado.lastrowid
+
