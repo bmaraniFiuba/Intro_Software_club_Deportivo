@@ -35,4 +35,3 @@ def obtener_reservas (filtros: dict, offset:int, limit:int) -> list[dict]:
             if condicion < len(cond) - 1: ## chequeo si es el ultimo elemento de la lista cond
                 where = "AND" +
                 
-    
