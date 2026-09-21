@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, url_for
 
-from services import socios as socios_service
-from utils import construir_links
+from club_deportivo_encuentro.services import socios as socios_service
+from club_deportivo_encuentro.utils import construir_links
 
 socios_bp = Blueprint('socios', __name__)
 

@@ -1,5 +1,5 @@
 import re
-from utils import construir_error_api, validar_string_no_vacio
+from club_deportivo_encuentro.utils import construir_error_api, validar_string_no_vacio
 
 FORMATO_EMAIL = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
 
