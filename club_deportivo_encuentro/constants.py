@@ -1,13 +1,13 @@
 import os
 from dotenv import load_dotenv
+from datetime import datetime, timezone, timedelta
 
 load_dotenv()
 
+ZONA_GMT3 = timezone(timedelta(hours=-3))
+
 # URL base de la API
 BASE_URL = '/club_deportivo_encuentro'
-
-# Formato de fecha esperado por la API
-FORMATO_FECHA = '%Y-%m-%dT%H:%M:%S.%f%z'
 
 
 
