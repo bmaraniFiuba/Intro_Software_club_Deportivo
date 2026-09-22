@@ -94,7 +94,7 @@ def crear_reserva(id_socio: int, id_cancha: int, fecha_hora_inicio: str, fecha_h
         ), 409)
 
     # 3. Validar Cancha
-    cancha = canchas_repo.obtener_por_id(id_cancha)
+    cancha = canchas_repo.obtener_cancha_por_id(id_cancha)
     if not cancha:
         raise ValueError(construir_error_api(
             code=ERROR_CODE_CANCHA_NOT_FOUND,
