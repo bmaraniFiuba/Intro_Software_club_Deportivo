@@ -1,31 +1,27 @@
 from flask import Blueprint, jsonify, request
+from sqlalchemy.exc import SQLAlchemyError
 from club_deportivo_encuentro.services import canchas as service
-# Agregar validardores  club_deportivo_encuentro.validators import canchas as validator
+from club_deportivo_encuentro.validators import canchas as validator
+from club_deportivo_encuentro.utils import construir_error_api, respuesta_paginada, validar_paginacion
 
 canchas_bp = Blueprint('canchas', __name__)
 
 @canchas_bp.route('/canchas', methods=['GET'])
 def listar_canchas():
-    # 1. Capturar filtros y paginación desde la query string
-    filtros = {
-        'id_deporte': request.args.get('id_deporte', type=int),
-        'nombre': request.args.get('nombre', type=str),
-        'techada': request.args.get('techada', type=lambda v: v.lower() == 'true' if v else None),
-        'activa': request.args.get('activa', type=lambda v: v.lower() == 'true' if v else None),
-        '_limit': request.args.get('_limit', default=10, type=int),
-        '_offset': request.args.get('_offset', default=0, type=int)
-    }
+    try:
+        limit, offset = validar_paginacion(request.args)
+        filtros = validator.validar_filtros_canchas(request.args)
+    except ValueError as error:
+        return jsonify(error.args[0]), 400
 
-    # 2. Pasar los filtros al servicio
-    resultado = service.obtener_canchas(filtros)
-
-    # 3. Responder 204 si la lista de canchas está vacía
-    if not resultado or not resultado.get('canchas'):
-        return '', 204
-
-    # 4. Retornar JSON (el servicio ya debería devolver el diccionario con 'canchas' y '_links')
-    return jsonify(resultado), 200
-
+    filtros.update({'_limit': limit, '_offset': offset})
+    try:
+        canchas, total = service.obtener_canchas(filtros)
+    except SQLAlchemyError:
+        return jsonify(construir_error_api(
+            'internal.error', 'Error interno del servidor', 'No se pudieron consultar las canchas.'
+        )), 500
+    return respuesta_paginada('canchas', canchas, total, limit, offset)
 
 @canchas_bp.route('/canchas', methods=['POST'])
 def crear_cancha():

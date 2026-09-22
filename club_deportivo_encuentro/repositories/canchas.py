@@ -1,5 +1,4 @@
-# Asegurate de importar tu función de conexión a la base de datos
-from club_deportivo_encuentro.db import get_db_connection
+from club_deportivo_encuentro.db import ejecutar_consulta
 
 def _formatear_cancha(row):
     """Convierte los TINYINT de MySQL a booleanos de Python para el JSON."""
@@ -10,38 +9,22 @@ def _formatear_cancha(row):
     return row
 
 def obtener_canchas(filtros):
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-
-    query = "SELECT * FROM canchas WHERE 1=1"
-    params = []
-
-    if filtros.get('id_deporte') is not None:
-        query += " AND id_deporte = %s"
-        params.append(filtros['id_deporte'])
-    
+    where = " FROM canchas WHERE 1=1"
+    params = {}
+    for campo in ('id_deporte', 'techada', 'activa'):
+        if filtros.get(campo) is not None:
+            where += f" AND {campo} = :{campo}"
+            params[campo] = filtros[campo]
     if filtros.get('nombre') is not None:
-        query += " AND LOWER(nombre) LIKE LOWER(%s)"
-        params.append(f"%{filtros['nombre']}%")
-    
-    if filtros.get('techada') is not None:
-        query += " AND techada = %s"
-        params.append(filtros['techada'])
-    
-    if filtros.get('activa') is not None:
-        query += " AND activa = %s"
-        params.append(filtros['activa'])
+        where += " AND LOWER(nombre) LIKE LOWER(:nombre)"
+        params['nombre'] = f"%{filtros['nombre']}%"
 
-    query += " ORDER BY id ASC LIMIT %s OFFSET %s"
-    params.extend([filtros['_limit'], filtros['_offset']])
-
-    cursor.execute(query, tuple(params))
-    filas = cursor.fetchall()
-    
-    cursor.close()
-    conn.close()
-
-    return [_formatear_cancha(fila) for fila in filas]
+    total = ejecutar_consulta("SELECT COUNT(*) AS total" + where, params)[0]['total']
+    params.update({'limit': filtros['_limit'], 'offset': filtros['_offset']})
+    filas = ejecutar_consulta(
+        "SELECT *" + where + " ORDER BY id ASC LIMIT :limit OFFSET :offset", params
+    )
+    return [_formatear_cancha(fila) for fila in filas], total
 
 def crear_cancha(data):
     conn = get_db_connection()
