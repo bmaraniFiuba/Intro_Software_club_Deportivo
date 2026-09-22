@@ -59,6 +59,16 @@ def validar_entero(numero, nombre: str = 'numero') -> int:
         ))
 
 
+def validar_string_no_vacio(valor, nombre: str) -> str:
+    if valor is None or not str(valor).strip():
+        raise ValueError(construir_error_api(
+            code=f'required.{nombre}',
+            message=f"Campo requerido: '{nombre}'",
+            description=f"El campo '{nombre}' es obligatorio y no puede estar vacio"
+        ))
+
+    return str(valor).strip()
+
 def validar_minimo(valor: int, minimo: int, nombre: str) -> int:
     if valor < minimo:
         logger.warning(f"Valor por debajo del minimo: '{nombre}' es {valor}, minimo esperado {minimo}")
@@ -85,15 +95,6 @@ def validar_maximo(valor: int, maximo: int, nombre: str) -> int:
     return valor
 
 
-def validar_string_no_vacio(valor, nombre: str) -> str:
-    if valor is None or not str(valor).strip():
-        raise ValueError(construir_error_api(
-            code=f'required.{nombre}',
-            message=f"Campo requerido: '{nombre}'",
-            description=f"El campo '{nombre}' es obligatorio y no puede estar vacio"
-        ))
-
-    return str(valor).strip()
 
 def validar_entero_estricto(valor, nombre: str) -> int:
     texto = str(valor).strip()
@@ -121,17 +122,34 @@ def construir_links(url_base: str, parametros: dict, total: int, limit: int, off
  
     _prev y _next se omiten cuando no existen. _last apunta al inicio de la ultima pagina.
     """
-    ultimo_offset = ((total - 1) // limit) * limit if total > 0 else 0
+    if total > 0:
+        ultimo_offset = ((total - 1) // limit) * limit # ej si total = 25 reservas, limit=10 , ultOffset= 20, las paginas muestran las reservas tq asi: (0-9, 10-19, 20-24)
+    else: 
+        ultimo_offset = 0
  
     def enlace(nuevo_offset: int) -> dict:
-        query = {**parametros, PARAMETRO_LIMIT: limit, PARAMETRO_OFFSET: nuevo_offset}
-        return {'href': f'{url_base}?{urlencode(query)}'}
+        query = parametros.copy() # se utiliza parametros para conservar los filtros originales del usuario
+        
+        query[PARAMETRO_LIMIT] = limit
+        query[PARAMETRO_OFFSET] = nuevo_offset
+        return {'href': f'{url_base}?{urlencode(query)}'} #urlencode te deja el link de la forma ?estado=confirmada&_limit=10&_offset=20
  
-    links = {'_first': enlace(0)}
+    links = {'_first': enlace(0)} #el primer link siempre arranca con offset=0 
  
     if offset > 0:
+        offset_anterior = offset - limit
+        
+        if offset_anterior < 0:
+            offset_anterior = 0
+        
+        if offset_anterior > ultimo_offset:
+            offset_anterior = ultimo_offset
+        
+        links['_prev'] = enlace(ultimo_offset)
+        
+        #otra forma
         # min(...) evita apuntar mas alla de la ultima pagina si el offset pedido se paso del total
-        links['_prev'] = enlace(min(max(offset - limit, 0), ultimo_offset))
+        # links['_prev'] = enlace(min(max(offset - limit, 0), ultimo_offset))
  
     if offset + limit < total:
         links['_next'] = enlace(offset + limit)
