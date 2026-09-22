@@ -25,10 +25,8 @@ def listar_canchas():
 
 @canchas_bp.route('/canchas', methods=['POST'])
 def crear_cancha():
-    data = request.get_json()
-    
-    # validator.validar_creacion(data) # Descomentar cuando tengas el validador
-    
+    data = request.get_json(silent=True)
+    validator.validar_creacion_cancha(data)
     nueva_cancha = service.crear_cancha(data)
     return jsonify(nueva_cancha), 201
 
@@ -41,10 +39,8 @@ def obtener_cancha(id):
 
 @canchas_bp.route('/canchas/<int:id>', methods=['PATCH'])
 def actualizar_cancha(id):
-    data = request.get_json()
-    
-    # validator.validar_actualizacion(data) # Descomentar cuando tengas el validador
-    
+    data = request.get_json(silent=True)
+    validator.validar_actualizacion_cancha(data)
     service.actualizar_cancha(id, data)
     return '', 204
 
@@ -57,21 +53,23 @@ def eliminar_cancha(id):
 
 @canchas_bp.route('/canchas/disponibles', methods=['GET'])
 def listar_canchas_disponibles():
-    params = {
-        'fecha': request.args.get('fecha'),
-        'hora_inicio': request.args.get('hora_inicio'),
-        'hora_fin': request.args.get('hora_fin'),
-        'id_deporte': request.args.get('id_deporte', type=int),
-        'techada': request.args.get('techada', type=lambda v: v.lower() == 'true' if v else None),
-        '_limit': request.args.get('_limit', default=10, type=int),
-        '_offset': request.args.get('_offset', default=0, type=int)
-    }
-    
-    # validator.validar_disponibilidad(params) # Descomentar cuando tengas el validador
+    limit, offset = validar_paginacion(request.args)
+    params = validator.validar_disponibilidad(request.args)
+    params.update({'_limit': limit, '_offset': offset})
+    canchas, total = service.obtener_canchas_disponibles(params)
+    return respuesta_paginada('canchas', canchas, total, limit, offset)
 
-    resultado = service.obtener_canchas_disponibles(params)
-    
-    if not resultado or not resultado.get('canchas'):
-        return jsonify({'canchas': [], '_links': {}}), 200  # Ojo, el enunciado dice: "Si no hay canchas libres, responder 200 con un arreglo vacío"
 
-    return jsonify(resultado), 200
+@canchas_bp.errorhandler(ValueError)
+def manejar_error_datos(error):
+    respuesta = error.args[0]
+    codigo = respuesta['errors'][0]['code']
+    estados = {'cancha.not.found': 404, 'deporte.not.found': 404, 'cancha.has.reservas': 409}
+    return jsonify(respuesta), estados.get(codigo, 400)
+
+
+@canchas_bp.errorhandler(SQLAlchemyError)
+def manejar_error_db(error):
+    return jsonify(construir_error_api(
+        'internal.error', 'Error interno del servidor', 'No se pudo completar la operación.'
+    )), 500

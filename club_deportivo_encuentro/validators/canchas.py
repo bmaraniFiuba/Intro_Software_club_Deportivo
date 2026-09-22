@@ -1,47 +1,41 @@
+from datetime import date
+from re import fullmatch
 from club_deportivo_encuentro.utils import construir_error_api, validar_entero_estricto
 
 
-def validar_creacion_cancha(data):
-    """
-    Valida el cuerpo JSON para la creación/edición de una cancha.
-    Alineado con el esquema SQL de la base de datos Club_Deportivo.
-    """
-    errores = []
-
-    # 1. Verificar que se envíe un JSON válido
+def _validar_datos_cancha(data, parcial):
     if not isinstance(data, dict):
-        return ["El cuerpo de la petición debe ser un objeto JSON."]
+        raise ValueError(construir_error_api('invalid.body', 'JSON inválido', 'El cuerpo debe ser un objeto JSON.'))
+    errores = []
+    if parcial:
+        for campo in data:
+            if campo not in ('nombre', 'precio_hora', 'techada', 'activa'):
+                errores.append(f"El campo '{campo}' no se puede modificar.")
+    if not parcial or 'nombre' in data:
+        nombre = data.get('nombre')
+        if not isinstance(nombre, str) or not nombre.strip():
+            errores.append("El campo 'nombre' es obligatorio y debe ser un texto no vacío.")
+        elif len(nombre.strip()) > 30:
+            errores.append("El campo 'nombre' no puede superar los 30 caracteres.")
+    campos_enteros = ('precio_hora',) if parcial else ('id_deporte', 'precio_hora')
+    for campo in campos_enteros:
+        if not parcial or campo in data:
+            valor = data.get(campo)
+            if type(valor) is not int or not 1 <= valor <= 2147483647:
+                errores.append(f"El campo '{campo}' debe ser un entero entre 1 y 2147483647.")
+    for campo in ('techada', 'activa'):
+        if campo in data and type(data[campo]) is not bool:
+            errores.append(f"El campo '{campo}' debe ser booleano (true o false).")
+    if errores:
+        raise ValueError(construir_error_api('invalid.body', 'Datos inválidos', ' '.join(errores)))
 
-    # 2. Validar 'id_deporte' (Requerido, entero positivo)
-    id_deporte = data.get('id_deporte')
-    if id_deporte is None:
-        errores.append("El campo 'id_deporte' es obligatorio.")
-    elif not isinstance(id_deporte, int) or id_deporte <= 0:
-        errores.append("El campo 'id_deporte' debe ser un número entero positivo.")
 
-    # 3. Validar 'nombre' (Requerido, texto, máx 30 caracteres)
-    nombre = data.get('nombre')
-    if not nombre or not isinstance(nombre, str) or not nombre.strip():
-        errores.append("El campo 'nombre' es obligatorio y debe ser un texto.")
-    elif len(nombre.strip()) > 30:
-        errores.append("El campo 'nombre' no puede superar los 30 caracteres.")
+def validar_creacion_cancha(data):
+    _validar_datos_cancha(data, parcial=False)
 
-    # 4. Validar 'precio_hora' (Requerido, entero positivo)
-    precio_hora = data.get('precio_hora')
-    if precio_hora is None:
-        errores.append("El campo 'precio_hora' es obligatorio.")
-    elif not isinstance(precio_hora, int) or precio_hora <= 0:
-        errores.append("El campo 'precio_hora' debe ser un número entero positivo mayor a 0.")
 
-    # 5. Validar 'techada' (Opcional en JSON, pero si viene debe ser booleano)
-    if 'techada' in data and not isinstance(data['techada'], bool):
-        errores.append("El campo 'techada' debe ser booleano (true o false).")
-
-    # 6. Validar 'activa' (Opcional en JSON, pero si viene debe ser booleano)
-    if 'activa' in data and not isinstance(data['activa'], bool):
-        errores.append("El campo 'activa' debe ser booleano (true o false).")
-
-    return errores
+def validar_actualizacion_cancha(data):
+    _validar_datos_cancha(data, parcial=True)
 
 
 def validar_filtros_canchas(parametros):
@@ -57,4 +51,30 @@ def validar_filtros_canchas(parametros):
                     f"El parámetro '{campo}' debe ser true o false."
                 ))
             filtros[campo] = valor.lower() == 'true'
+    return filtros
+
+
+def validar_disponibilidad(parametros):
+    filtros = validar_filtros_canchas({
+        campo: parametros[campo] for campo in ('id_deporte', 'techada') if campo in parametros
+    })
+    errores = []
+    fecha = parametros.get('fecha', '')
+    if not fullmatch(r'[0-9]{4}-[0-9]{2}-[0-9]{2}', fecha):
+        errores.append("'fecha' es obligatoria y debe tener formato YYYY-MM-DD.")
+    else:
+        try:
+            date.fromisoformat(fecha)
+        except ValueError:
+            errores.append("'fecha' debe ser una fecha válida.")
+    for campo in ('hora_inicio', 'hora_fin'):
+        valor = parametros.get(campo, '')
+        if not fullmatch(r'([01][0-9]|2[0-3]):00:00', valor):
+            errores.append(f"'{campo}' es obligatorio y debe tener formato HH:00:00 (00 a 23).")
+        filtros[campo] = valor
+    if not errores and filtros['hora_inicio'] >= filtros['hora_fin']:
+        errores.append('La hora de fin debe ser posterior a la hora de inicio.')
+    if errores:
+        raise ValueError(construir_error_api('invalid.parameters', 'Parámetros inválidos', ' '.join(errores)))
+    filtros['fecha'] = fecha
     return filtros

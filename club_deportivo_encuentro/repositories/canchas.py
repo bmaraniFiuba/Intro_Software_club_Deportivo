@@ -1,4 +1,4 @@
-from club_deportivo_encuentro.db import ejecutar_consulta
+from club_deportivo_encuentro.db import ejecutar_consulta, ejecutar_escritura
 
 def _formatear_cancha(row):
     """Convierte los TINYINT de MySQL a booleanos de Python para el JSON."""
@@ -26,127 +26,61 @@ def obtener_canchas(filtros):
     )
     return [_formatear_cancha(fila) for fila in filas], total
 
+def existe_deporte(id_deporte):
+    filas = ejecutar_consulta('SELECT id FROM deportes WHERE id = :id', {'id': id_deporte})
+    return bool(filas)
+
+
 def crear_cancha(data):
-    conn = get_db_connection()
-    cursor = conn.cursor()
+    nuevo_id = ejecutar_escritura(
+        'INSERT INTO canchas (nombre, id_deporte, precio_hora, techada, activa) '
+        'VALUES (:nombre, :id_deporte, :precio_hora, :techada, :activa)',
+        {'nombre': data['nombre'], 'id_deporte': data['id_deporte'],
+         'precio_hora': data['precio_hora'], 'techada': data.get('techada', False),
+         'activa': data.get('activa', True)}
+    )
+    return obtener_cancha_por_id(nuevo_id)
 
-    query = """
-        INSERT INTO canchas (id_deporte, nombre, precio_hora, techada, activa) 
-        VALUES (%s, %s, %s, %s, %s)
-    """
-    
-    techada = data.get('techada', False)
-    activa = data.get('activa', True)
-
-    cursor.execute(query, (
-        data['id_deporte'],
-        data['nombre'].strip(),
-        data['precio_hora'],
-        techada,
-        activa
-    ))
-    conn.commit()
-    new_id = cursor.lastrowid
-
-    cursor.close()
-    conn.close()
-
-    return obtener_cancha_por_id(new_id)
 
 def obtener_cancha_por_id(id_cancha):
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-    
-    cursor.execute("SELECT * FROM canchas WHERE id = %s", (id_cancha,))
-    fila = cursor.fetchone()
-    
-    cursor.close()
-    conn.close()
-    
-    return _formatear_cancha(fila)
+    filas = ejecutar_consulta('SELECT * FROM canchas WHERE id = :id', {'id': id_cancha})
+    return _formatear_cancha(filas[0]) if filas else None
+
 
 def actualizar_cancha(id_cancha, data):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-
     campos = []
-    params = []
-    
-    for key, value in data.items():
-        campos.append(f"{key} = %s")
-        params.append(value)
+    params = {'id': id_cancha}
+    for campo in ('nombre', 'precio_hora', 'techada', 'activa'):
+        if campo in data:
+            campos.append(f'{campo} = :{campo}')
+            params[campo] = data[campo]
+    if campos:
+        ejecutar_escritura('UPDATE canchas SET ' + ', '.join(campos) + ' WHERE id = :id', params)
 
-    if not campos:
-        return
-
-    params.append(id_cancha)
-    query = f"UPDATE canchas SET {', '.join(campos)} WHERE id = %s"
-
-    cursor.execute(query, tuple(params))
-    conn.commit()
-    
-    cursor.close()
-    conn.close()
 
 def tiene_reservas(id_cancha):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    
-    cursor.execute("SELECT COUNT(*) FROM reservas WHERE id_cancha = %s", (id_cancha,))
-    count = cursor.fetchone()[0]
-    
-    cursor.close()
-    conn.close()
-    
-    return count > 0
+    filas = ejecutar_consulta('SELECT id FROM reservas WHERE id_cancha = :id LIMIT 1', {'id': id_cancha})
+    return bool(filas)
+
 
 def eliminar_cancha(id_cancha):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    
-    cursor.execute("DELETE FROM canchas WHERE id = %s", (id_cancha,))
-    conn.commit()
-    
-    cursor.close()
-    conn.close()
+    ejecutar_escritura('DELETE FROM canchas WHERE id = :id', {'id': id_cancha})
+
 
 def obtener_canchas_disponibles(params):
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-
-    # Formateamos los strings para que MySQL los interprete como DATETIME
-    fecha_hora_inicio = f"{params['fecha']} {params['hora_inicio']}"
-    fecha_hora_fin = f"{params['fecha']} {params['hora_fin']}"
-
-    # Lógica de exclusión: Si hay una reserva 'confirmada' cuyo inicio es menor al fin solicitado 
-    # y su fin es mayor al inicio solicitado, la cancha está ocupada.
-    query = """
-        SELECT c.* FROM canchas c
-        WHERE c.activa = TRUE
-        AND c.id NOT IN (
-            SELECT r.id_cancha FROM reservas r
-            WHERE r.estado = 'confirmada'
-            AND r.fecha_hora_inicio < %s 
-            AND r.fecha_hora_fin > %s
-        )
-    """
-    sql_params = [fecha_hora_fin, fecha_hora_inicio]
-
-    if params.get('id_deporte') is not None:
-        query += " AND c.id_deporte = %s"
-        sql_params.append(params['id_deporte'])
-    
-    if params.get('techada') is not None:
-        query += " AND c.techada = %s"
-        sql_params.append(params['techada'])
-
-    query += " ORDER BY c.id ASC LIMIT %s OFFSET %s"
-    sql_params.extend([params['_limit'], params['_offset']])
-
-    cursor.execute(query, tuple(sql_params))
-    filas = cursor.fetchall()
-
-    cursor.close()
-    conn.close()
-
-    return [_formatear_cancha(fila) for fila in filas]
+    where = """ FROM canchas c WHERE c.activa = TRUE AND NOT EXISTS (
+        SELECT 1 FROM reservas r WHERE r.id_cancha = c.id AND r.estado = 'confirmada'
+        AND r.fecha_hora_inicio < :fin AND r.fecha_hora_fin > :inicio
+    )"""
+    valores = {'inicio': f"{params['fecha']} {params['hora_inicio']}",
+               'fin': f"{params['fecha']} {params['hora_fin']}"}
+    for campo in ('id_deporte', 'techada'):
+        if params.get(campo) is not None:
+            where += f' AND c.{campo} = :{campo}'
+            valores[campo] = params[campo]
+    total = ejecutar_consulta('SELECT COUNT(*) AS total' + where, valores)[0]['total']
+    valores.update({'limit': params['_limit'], 'offset': params['_offset']})
+    filas = ejecutar_consulta(
+        'SELECT c.*' + where + ' ORDER BY c.id ASC LIMIT :limit OFFSET :offset', valores
+    )
+    return [_formatear_cancha(fila) for fila in filas], total
