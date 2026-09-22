@@ -1,4 +1,5 @@
-from club_deportivo_encuentro.db import ejecutar_consulta
+from club_deportivo_encuentro.db import (ejecutar_consulta, ejecutar_escritura)
+from ..constants import FORMATO_FECHA_HORA
 
 
 def obtener_reservas (filtros: dict, offset:int, limit:int) -> list[dict]:
@@ -23,11 +24,11 @@ def obtener_reservas (filtros: dict, offset:int, limit:int) -> list[dict]:
         query_params["estado"] = filtros["estado"]
     
     if filtros.get('fecha_desde') is not None:
-        cond.append('fecha_hora_inicio >= :fecha_desde')
+        cond.append('DATE(fecha_hora_inicio) >= :fecha_desde')
         query_params['fecha_desde'] = filtros['fecha_desde']
 
     if filtros.get('fecha_hasta') is not None:
-        cond.append('fecha_hora_inicio <= :fecha_hasta')
+        cond.append('DATE(fecha_hora_inicio) <= :fecha_hasta')
         query_params['fecha_hasta'] = filtros['fecha_hasta']
         
     where = ""
@@ -38,10 +39,69 @@ def obtener_reservas (filtros: dict, offset:int, limit:int) -> list[dict]:
             if condicion < len(cond) - 1: ## si no es el ultimo elemento de la lista, etra a este if
                 where += ' AND '
     
-        SQL = f"SELECT * FROM reservas {where} ORDER BY id ASC LIMIT :limit OFFSET :offset" #ordena por id de menor a mayor
-        #cuando esta funcion recibe limit y offset como parámetros, ya le llegan validados y con su valor definitivo
-        query_params["limit"] = limit
-        query_params["offset"] = offset 
-        
+    SQL = f"SELECT * FROM reservas {where} ORDER BY id ASC LIMIT :limit OFFSET :offset" #ordena por id de menor a mayor
+    #cuando esta funcion recibe limit y offset como parámetros, ya le llegan validados y con su valor definitivo
+    query_params["limit"] = limit
+    query_params["offset"] = offset 
+    
     return ejecutar_consulta(SQL, query_params) # sqlalchemy agarra :id_socio y lo relaciona con ej "id_socio": 5
     
+# funciones del metodo POST
+def existe_superposicion_cancha(id_cancha: int, inicio, fin) -> bool:
+    SQL = """
+        SELECT 1 FROM reservas
+        WHERE id_cancha = :id_cancha
+          AND estado = 'confirmada'
+          AND fecha_hora_inicio < :fin
+          AND fecha_hora_fin > :inicio
+        LIMIT 1
+    """
+    resultado = ejecutar_consulta(SQL, {
+        "id_cancha": id_cancha,
+        "inicio": inicio,
+        "fin": fin,
+    })
+    return len(resultado) > 0
+
+def existe_superposicion_socio(id_socio: int, inicio, fin) -> bool:
+    SQL = """
+        SELECT 1 FROM reservas
+        WHERE id_socio = :id_socio
+          AND estado = 'confirmada'
+          AND fecha_hora_inicio < :fin
+          AND fecha_hora_fin > :inicio
+        LIMIT 1
+    """
+    resultado = ejecutar_consulta(SQL, {
+        "id_socio": id_socio,
+        "inicio": inicio,
+        "fin": fin,
+    })
+    return len(resultado) > 0
+
+def crear(datos: dict) -> dict:
+    SQL = """
+        INSERT INTO reservas
+            (id_socio, id_cancha, fecha_hora_inicio, fecha_hora_fin, estado, precio_hora, precio_total)
+        VALUES
+            (:id_socio, :id_cancha, :fecha_hora_inicio, :fecha_hora_fin, :estado, :precio_hora, :precio_total)
+    """
+    nuevo_id = ejecutar_escritura(SQL, {
+        **datos,
+        "fecha_hora_inicio": datos["fecha_hora_inicio"].replace(tzinfo=None),
+        "fecha_hora_fin": datos["fecha_hora_fin"].replace(tzinfo=None),
+    })
+
+    return {
+        "id": nuevo_id,
+        "id_socio": datos["id_socio"],
+        "id_cancha": datos["id_cancha"],
+        "fecha_hora_inicio": _formatear_fecha(datos["fecha_hora_inicio"]),
+        "fecha_hora_fin": _formatear_fecha(datos["fecha_hora_fin"]),
+        "estado": datos["estado"],
+        "precio_hora": datos["precio_hora"],
+        "precio_total": datos["precio_total"],
+    }
+    
+def _formatear_fecha(dt) -> str:
+    return dt.strftime(FORMATO_FECHA_HORA)

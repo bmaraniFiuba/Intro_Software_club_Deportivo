@@ -40,8 +40,8 @@ CREATE TABLE socios (
 -- =========================
 CREATE TABLE reservas (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    id_socio INT,
-    id_cancha INT,
+    id_socio INT NOT NULL,
+    id_cancha INT NOT NULL,
     estado VARCHAR(30),
     fecha_hora_inicio DATETIME NOT NULL,
     fecha_hora_fin DATETIME NOT NULL,

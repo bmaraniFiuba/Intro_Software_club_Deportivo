@@ -1,5 +1,5 @@
 from datetime import datetime
-from re import fullmatch, sub
+from re import fullmatch
 import logging
 from urllib.parse import urlencode
 from flask import jsonify, request
@@ -40,22 +40,6 @@ def validar_formato_fecha(fecha: str, formato: str, nombre: str = 'fecha') -> da
             code=f'invalid.{nombre}.format',
             message=f"Formato de '{nombre}' invalido",
             description=f"El valor '{fecha}' no cumple el formato esperado '{formato}'"
-        ))
-
-
-def validar_entero(numero, nombre: str = 'numero') -> int:
-    valor = str(numero)
-    valor_sin_letras = sub('[a-zA-Z]+', '', valor)
-
-    try:
-        return int(valor_sin_letras)
-    except ValueError:
-        logger.warning(f"Valor numerico invalido: '{numero}' no puede convertirse a entero")
-
-        raise ValueError(construir_error_api(
-            code=f'invalid.{nombre}.format',
-            message=f"Formato de '{nombre}' invalido",
-            description=f"El valor '{numero}' no puede convertirse a un numero entero"
         ))
 
 
