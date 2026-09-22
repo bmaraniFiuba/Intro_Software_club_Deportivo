@@ -43,21 +43,6 @@ def validar_formato_fecha(fecha: str, formato: str, nombre: str = 'fecha') -> da
         ))
 
 
-def validar_entero(numero, nombre: str = 'numero') -> int:
-    valor = str(numero)
-    valor_sin_letras = sub('[a-zA-Z]+', '', valor)
-
-    try:
-        return int(valor_sin_letras)
-    except ValueError:
-        logger.warning(f"Valor numerico invalido: '{numero}' no puede convertirse a entero")
-
-        raise ValueError(construir_error_api(
-            code=f'invalid.{nombre}.format',
-            message=f"Formato de '{nombre}' invalido",
-            description=f"El valor '{numero}' no puede convertirse a un numero entero"
-        ))
-
 
 def validar_string_no_vacio(valor, nombre: str) -> str:
     if valor is None or not str(valor).strip():
@@ -99,16 +84,18 @@ def validar_maximo(valor: int, maximo: int, nombre: str) -> int:
 def validar_entero_estricto(valor, nombre: str) -> int:
     texto = str(valor).strip()
  
-    if not fullmatch(r'[+-]?[0-9]+', texto):
-        logger.warning(f"Valor numerico invalido: '{valor}' no es un entero para '{nombre}'")
+    try:
+        return int(texto)
+    
+    except:
+        logger.warning(f"Valor numérico inválido: '{valor}' no es un entero para '{nombre}'") #es un aviso y una ayuda para el programador al hacer debug
  
-        raise ValueError(construir_error_api(
+        raise ValueError(construir_error_api(  #detiene inmediatamente la ejecución de la función y arroja el msje de error.
             code=f"invalid.{nombre.lstrip('_')}.format",
             message=f"Formato de '{nombre}' invalido",
             description=f"El valor '{valor}' no puede convertirse a un numero entero"
         ))
  
-    return int(texto)
  
  
 def construir_links(url_base: str, parametros: dict, total: int, limit: int, offset: int) -> dict:
@@ -146,7 +133,6 @@ def construir_links(url_base: str, parametros: dict, total: int, limit: int, off
             offset_anterior = ultimo_offset
         
         links['_prev'] = enlace(ultimo_offset)
-        
         #otra forma
         # min(...) evita apuntar mas alla de la ultima pagina si el offset pedido se paso del total
         # links['_prev'] = enlace(min(max(offset - limit, 0), ultimo_offset))
@@ -154,21 +140,32 @@ def construir_links(url_base: str, parametros: dict, total: int, limit: int, off
     if offset + limit < total:
         links['_next'] = enlace(offset + limit)
  
-    links['_last'] = enlace(ultimo_offset)
+    links['_last'] = enlace(offset_anterior)
     return links
  
  
 def validar_paginacion(parametros) -> tuple[int, int]:
-    """Lee _limit y _offset de los query params y devuelve (limit, offset) ya validados.
- 
+    """Lee _limit y _offset de los query params y devuelve (limit, offset) ya validados. 
     Si faltan usa los valores por defecto (10 y 0). Si son invalidos lanza ValueError
     con el payload de error de la API (mismo criterio que el resto de las validaciones).
     """
-    limit = validar_entero_estricto(parametros.get(PARAMETRO_LIMIT, PAGINACION_LIMIT_DEFAULT), PARAMETRO_LIMIT)
-    limit = validar_minimo(limit, PAGINACION_LIMIT_MINIMO, PARAMETRO_LIMIT)
-    limit = validar_maximo(limit, PAGINACION_LIMIT_MAXIMO, PARAMETRO_LIMIT)
+
+    if parametros.get(PARAMETRO_LIMIT) is not None:
+        limit_crudo = parametros.get(PARAMETRO_LIMIT)
+    else:
+        limit_crudo = PAGINACION_LIMIT_DEFAULT
+        
+    limit = validar_entero_estricto (limit_crudo, PARAMETRO_LIMIT) 
+    limit = validar_minimo(limit_crudo, PAGINACION_LIMIT_MINIMO, PARAMETRO_LIMIT)
+    limit = validar_maximo(limit_crudo, PAGINACION_LIMIT_MAXIMO, PARAMETRO_LIMIT)
  
-    offset = validar_entero_estricto(parametros.get(PARAMETRO_OFFSET, PAGINACION_OFFSET_DEFAULT), PARAMETRO_OFFSET)
+    #VALIDO EL OFFSET
+    if parametros.get(PARAMETRO_OFFSET) is not None:
+        offset_crudo = parametros.get(PARAMETRO_OFFSET)
+    else:
+        offset_crudo = PAGINACION_OFFSET_DEFAULT
+        
+    offset = validar_entero_estricto(offset_crudo, PARAMETRO_OFFSET)
     offset = validar_minimo(offset, PAGINACION_OFFSET_MINIMO, PARAMETRO_OFFSET)
  
     return limit, offset
@@ -176,7 +173,6 @@ def validar_paginacion(parametros) -> tuple[int, int]:
  
 def respuesta_paginada(clave: str, registros: list[dict], total: int, limit: int, offset: int):
     """Arma la respuesta HTTP de un listado paginado. Usarla al final de toda ruta de listado.
- 
     - Si ningun registro cumple los filtros (total == 0): 204 sin cuerpo (asi lo define el swagger).
     - Si no: 200 con los datos bajo 'clave' (canchas, socios, reservas...) y los '_links' HATEOAS.
       Si el _offset pedido se paso del total, la lista viene vacia pero con links para volver.
