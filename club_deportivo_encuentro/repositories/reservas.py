@@ -2,6 +2,7 @@ from club_deportivo_encuentro.db import (ejecutar_consulta, ejecutar_escritura)
 from ..constants import FORMATO_FECHA_HORA
 
 
+#funciones para metodo GET
 def obtener_reservas (filtros: dict, offset:int, limit:int) -> list[dict]:
     cond = []
     query_params = {}
@@ -45,6 +46,41 @@ def obtener_reservas (filtros: dict, offset:int, limit:int) -> list[dict]:
     query_params["offset"] = offset 
     
     return ejecutar_consulta(SQL, query_params) # sqlalchemy agarra :id_socio y lo relaciona con ej "id_socio": 5
+
+def contar_reservas (filtros: dict) -> int:
+    cond = []
+    query_params = {}
+    
+# :algo es un parámetro que después se completa con el valor
+# correspondiente dentro de query_params.
+    
+    if filtros.get('id_socio') is not None:
+        cond.append("id_socio = :id_socio")
+        query_params["id_socio"] = filtros["id_socio"]
+    
+
+    if filtros.get('id_cancha') is not None:
+        cond.append("id_cancha = :id_cancha")
+        query_params["id_cancha"] = filtros["id_cancha"]
+
+
+    if filtros.get('estado') is not None:
+        cond.append("estado = :estado")
+        query_params["estado"] = filtros["estado"]
+    
+    if filtros.get('fecha_desde') is not None:
+        cond.append('DATE(fecha_hora_inicio) >= :fecha_desde')
+        query_params['fecha_desde'] = filtros['fecha_desde']
+        
+    
+    where = ""
+    if len(cond) > 0:
+        where = " Where "
+        for condicion in range (len(cond)):
+            where += cond[condicion]
+            if condicion < len(cond) - 1: ## si no es el ultimo elemento de la lista, etra a este if
+                where += ' AND '
+    
     
 # funciones del metodo POST
 def existe_superposicion_cancha(id_cancha: int, inicio, fin) -> bool:
