@@ -23,6 +23,8 @@ DB_URL      = f'mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_POR
 
 # Codigos de error, obviamente cambiarlos
 ERROR_CODE_INVALID_BODY        = 'invalid.body'
+ERROR_CODE_INVALID_MIN_VALUE   = 'invalid.min.value'
+ERROR_CODE_INVALID_MAX_VALUE   = 'invalid.max.value'
 ERROR_CODE_CANCHA_NOT_FOUND    = 'cancha.not.found'
 ERROR_CODE_SOCIO_NOT_FOUND     = 'socio.not.found'
 ERROR_CODE_RESERVA_NOT_FOUND   = 'reserva.not.found'
