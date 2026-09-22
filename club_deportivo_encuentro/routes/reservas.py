@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
-from ..services.reservas import crear_reserva
-from ..validators.reservas import validar_body_crear_reserva
+from ..services.reservas import crear_reserva, cambiar_estado_reserva
+from ..validators.reservas import validar_body_crear_reserva, validar_body_cambiar_estado
 
 
 
@@ -30,6 +30,15 @@ def post_reserva():
 def get_reserva_id(id_reserva):
     return
 
-@reservas_bp.route('/reservas/<int:id_reserva>', methods=['PUT'])
-def put_reserva(id_reserva):
-    return
+@reservas_bp.route('/reservas/<int:id_reserva>/estado', methods=['PUT'])
+def put_reserva_estado(id_reserva):
+    body = request.get_json(silent=True)
+    try:
+        nuevo_estado = validar_body_cambiar_estado(body)
+        reserva = cambiar_estado_reserva(id_reserva, nuevo_estado)
+    except ValueError as error:
+        status = error.args[1] if len(error.args) > 1 else 400
+        return jsonify(error.args[0]), status
+    
+    return jsonify(reserva), 200
+

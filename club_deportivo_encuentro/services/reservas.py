@@ -2,9 +2,22 @@ from datetime import datetime
 from ..repositories import reservas as reservas_repo
 from ..repositories import canchas as canchas_repo
 from ..repositories import socios as socios_repo
-from ..constants import (ZONA_GMT3, HORA_APERTURA, HORA_CIERRE, DURACION_MINIMA_HORAS, DURACION_MAXIMA_HORAS)
+from ..constants import (
+    ZONA_GMT3, HORA_APERTURA, HORA_CIERRE,
+    DURACION_MINIMA_HORAS, DURACION_MAXIMA_HORAS,
+    ESTADO_CONFIRMADA, ESTADO_CANCELADA, ESTADO_FINALIZADA,
+    ERROR_CODE_SOCIO_NOT_FOUND, ERROR_CODE_CANCHA_NOT_FOUND,
+    ERROR_CODE_RESERVA_NOT_FOUND, ERROR_CODE_TRANSICION_INVALIDA,
+)
 from ..utils import construir_error_api
 
+def asegurar_aware_datetime(fecha):
+    #Convierte a datetime aware en GMT-3, venga como string o como datetime naive
+    if isinstance(fecha, str):
+        fecha = datetime.fromisoformat(fecha)
+    if fecha.tzinfo is None:
+        fecha = fecha.replace(tzinfo=ZONA_GMT3)
+    return fecha
 
 def _validar_fechas(fecha_inicio: datetime, fecha_fin: datetime):
     """Validaciones básicas de horario según el enunciado."""
@@ -69,7 +82,7 @@ def crear_reserva(id_socio: int, id_cancha: int, fecha_hora_inicio: str, fecha_h
     socio = socios_repo.obtener_por_id(id_socio)
     if not socio:
         raise ValueError(construir_error_api(
-            code='socio.not.found',
+            code=ERROR_CODE_SOCIO_NOT_FOUND,
             message='Socio no encontrado',
             description=f"No existe un socio con id {id_socio}",
         ), 404)
@@ -84,7 +97,7 @@ def crear_reserva(id_socio: int, id_cancha: int, fecha_hora_inicio: str, fecha_h
     cancha = canchas_repo.obtener_por_id(id_cancha)
     if not cancha:
         raise ValueError(construir_error_api(
-            code='cancha.not.found',
+            code=ERROR_CODE_CANCHA_NOT_FOUND,
             message='Cancha no encontrada',
             description=f"No existe una cancha con id {id_cancha}",
         ), 404)
@@ -121,7 +134,7 @@ def crear_reserva(id_socio: int, id_cancha: int, fecha_hora_inicio: str, fecha_h
         "id_cancha": id_cancha,
         "fecha_hora_inicio": fecha_hora_inicio,
         "fecha_hora_fin": fecha_hora_fin,
-        "estado": "confirmada",
+        "estado": ESTADO_CONFIRMADA,
         "precio_hora": precio_hora,
         "precio_total": precio_total
     })
@@ -131,7 +144,7 @@ def obtener_reserva_por_id(id_reserva: int):
     reserva = reservas_repo.obtener_por_id(id_reserva)
     if not reserva:
         raise ValueError(construir_error_api(
-            code='reserva.not.found',
+            code=ERROR_CODE_RESERVA_NOT_FOUND,
             message='Reserva no encontrada',
             description=f"No existe una reserva con id {id_reserva}",
         ), 404)
@@ -150,39 +163,34 @@ def cambiar_estado_reserva(id_reserva: int, nuevo_estado: str):
     inicio = reserva["fecha_hora_inicio"]
     fin = reserva["fecha_hora_fin"]
 
-    # Si vinieron como string desde la base de datos, los convertimos a datetime
-    if isinstance(inicio, str):
-        inicio = datetime.fromisoformat(inicio)
-    if isinstance(fin, str):
-        fin = datetime.fromisoformat(fin)
-
-    # Regla 1: Confirmada -> Cancelada (solo si no empezó)
-    if estado_actual == "confirmada" and nuevo_estado == "cancelada":
+    
+     # Regla 1: Confirmada -> Cancelada (solo si no empezó)
+    if estado_actual == ESTADO_CONFIRMADA and nuevo_estado == ESTADO_CANCELADA:
         if inicio <= ahora:
             raise ValueError(construir_error_api(
-                code='transicion.no.permitida',
+                code=ERROR_CODE_TRANSICION_INVALIDA,
                 message='Transición no permitida',
                 description='No se puede cancelar una reserva que ya empezó o pasó',
             ), 409)
-        reservas_repo.actualizar_estado(id_reserva, "cancelada")
-        reserva["estado"] = "cancelada"
+        reservas_repo.actualizar_estado(id_reserva, ESTADO_CANCELADA)
+        reserva["estado"] = ESTADO_CANCELADA
         return reserva
 
     # Regla 2: Confirmada -> Finalizada (solo si ya terminó)
-    if estado_actual == "confirmada" and nuevo_estado == "finalizada":
+    if estado_actual == ESTADO_CONFIRMADA and nuevo_estado == ESTADO_FINALIZADA:
         if ahora < fin:
-           raise ValueError(construir_error_api(
-                code='transicion.no.permitida',
+            raise ValueError(construir_error_api(
+                code=ERROR_CODE_TRANSICION_INVALIDA,
                 message='Transición no permitida',
                 description='No se puede finalizar una reserva antes de su hora de fin',
             ), 409)
-        reservas_repo.actualizar_estado(id_reserva, "finalizada")
-        reserva["estado"] = "finalizada"
+        reservas_repo.actualizar_estado(id_reserva, ESTADO_FINALIZADA)
+        reserva["estado"] = ESTADO_FINALIZADA
         return reserva
 
     # Cualquier otro cambio de estado es inválido
     raise ValueError(construir_error_api(
-        code='transicion.no.permitida',
+        code=ERROR_CODE_TRANSICION_INVALIDA,
         message='Transición no permitida',
         description=f"Transición no permitida de {estado_actual} a {nuevo_estado}",
     ), 409)

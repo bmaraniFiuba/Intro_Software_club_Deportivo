@@ -23,10 +23,18 @@ DB_URL      = f'mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_POR
 
 # Codigos de error, obviamente cambiarlos
 ERROR_CODE_INVALID_BODY        = 'invalid.body'
-ERROR_CODE_INVALID_MIN_VALUE   = 'invalid.min.value'
-ERROR_CODE_INVALID_MAX_VALUE   = 'invalid.max.value'
-ERROR_CODE_ALUMNO_NOT_FOUND    = 'alumno.not.found'
-ERROR_CODE_MATERIA_NOT_FOUND   = 'materia.not.found'
+ERROR_CODE_CANCHA_NOT_FOUND    = 'cancha.not.found'
+ERROR_CODE_SOCIO_NOT_FOUND     = 'socio.not.found'
+ERROR_CODE_RESERVA_NOT_FOUND   = 'reserva.not.found'
+ERROR_CODE_SOLAPAMIENTO        = 'reserva.overlap'
+ERROR_CODE_ESTADO_INVALIDO     = 'reserva.estado.invalid'
+ERROR_CODE_TRANSICION_INVALIDA = 'reserva.estado.transition.not.allowed'
+
+#Estados de reserva
+ESTADO_CONFIRMADA = 'confirmada'
+ESTADO_CANCELADA = 'cancelada'
+ESTADO_FINALIZADA = 'finalizada'
+ESTADOS_VALIDOS = {ESTADO_CONFIRMADA, ESTADO_CANCELADA, ESTADO_FINALIZADA}
 
 # Horarios de atención y duración
 HORA_APERTURA = 8
