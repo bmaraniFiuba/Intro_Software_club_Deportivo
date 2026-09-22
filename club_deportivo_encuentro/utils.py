@@ -147,7 +147,7 @@ def construir_links(url_base: str, parametros: dict, total: int, limit: int, off
         if offset_anterior > ultimo_offset:
             offset_anterior = ultimo_offset
         
-        links['_prev'] = enlace(ultimo_offset)
+        links['_prev'] = enlace(offset_anterior)
         
         #otra forma
         # min(...) evita apuntar mas alla de la ultima pagina si el offset pedido se paso del total
@@ -156,7 +156,7 @@ def construir_links(url_base: str, parametros: dict, total: int, limit: int, off
     if offset + limit < total:
         links['_next'] = enlace(offset + limit)
  
-    links['_last'] = enlace(offset_anterior)
+    links['_last'] = enlace(ultimo_offset)
     return links
  
  
