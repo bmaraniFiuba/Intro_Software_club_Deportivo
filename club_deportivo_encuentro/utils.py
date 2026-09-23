@@ -171,9 +171,9 @@ def validar_paginacion(parametros) -> tuple[int, int]:
     else:
         limit_crudo = PAGINACION_LIMIT_DEFAULT
         
-    limit = validar_entero_estricto (limit_crudo, PARAMETRO_LIMIT) 
-    limit = validar_minimo(limit_crudo, PAGINACION_LIMIT_MINIMO, PARAMETRO_LIMIT)
-    limit = validar_maximo(limit_crudo, PAGINACION_LIMIT_MAXIMO, PARAMETRO_LIMIT)
+    limit = validar_entero_estricto(limit_crudo, PARAMETRO_LIMIT)
+    limit = validar_minimo(limit, PAGINACION_LIMIT_MINIMO, PARAMETRO_LIMIT)
+    limit = validar_maximo(limit, PAGINACION_LIMIT_MAXIMO, PARAMETRO_LIMIT)
  
     #VALIDO EL OFFSET
     if parametros.get(PARAMETRO_OFFSET) is not None:
