@@ -35,6 +35,11 @@ ERROR_CODE_TRANSICION_INVALIDA = 'reserva.estado.transition.not.allowed'
 ERROR_CODE_PARAMETRO_DESCONOCIDO = 'invalid.parameter.unknown'
 ERROR_CODE_INTERNAL            = 'internal.error'
 
+#RESERVAS
+ESTADO_CONFIRMADA = "confirmada"
+ESTADO_CANCELADA = "cancelada"
+ESTADO_FINALIZADA = "finalizada"
+ESTADOS = [ESTADO_CONFIRMADA, ESTADO_CANCELADA, ESTADO_FINALIZADA]
 
 # Horarios de atención y duración
 HORA_APERTURA = 8
