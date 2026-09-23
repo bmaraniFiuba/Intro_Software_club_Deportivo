@@ -30,4 +30,14 @@ def manejar_404(error):
     )), 404
 
 
+# Maneja error si se ingresa método HTTP q es inválido para esa ruta
+@app.errorhandler(405)
+def manejar_405(error):
+    return jsonify(construir_error_api(
+        code='method.not.allowed',
+        message='Método no permitido',
+        description='El método HTTP usado no está soportado para esta ruta.',
+    )), 405
+
+
 app.run(host="0.0.0.0", port=8080, debug=True)
