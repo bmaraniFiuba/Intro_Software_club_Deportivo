@@ -4,7 +4,7 @@ from ..constants import FORMATO_FECHA_HORA
 
 #funciones para metodo GET
 def obtener_reservas (filtros: dict, offset:int, limit:int) -> list[dict]:
-    cond = []
+    cond = [] #lo uso para generar la consulta a la base de datos
     query_params = {}
     
 # :algo es un parámetro que después se completa con el valor
@@ -48,7 +48,7 @@ def obtener_reservas (filtros: dict, offset:int, limit:int) -> list[dict]:
     return ejecutar_consulta(SQL, query_params) # sqlalchemy agarra :id_socio y lo relaciona con ej "id_socio": 5
 
 def contar_reservas (filtros: dict) -> int:
-    cond = []
+    cond = [] 
     query_params = {}
     
 # :algo es un parámetro que después se completa con el valor
@@ -69,10 +69,13 @@ def contar_reservas (filtros: dict) -> int:
         query_params["estado"] = filtros["estado"]
     
     if filtros.get('fecha_desde') is not None:
-        cond.append('DATE(fecha_hora_inicio) >= :fecha_desde')
+        cond.append('fecha_hora_inicio >= :fecha_desde')
         query_params['fecha_desde'] = filtros['fecha_desde']
         
-    
+    if filtros.get('fecha_hasta') is not None:
+        cond.append('fecha_hora_inicio <  :fecha_hasta')
+        query_params['fecha_hasta'] = filtros['fecha_hasta']
+        
     where = ""
     if len(cond) > 0:
         where = " Where "
@@ -80,6 +83,10 @@ def contar_reservas (filtros: dict) -> int:
             where += cond[condicion]
             if condicion < len(cond) - 1: ## si no es el ultimo elemento de la lista, etra a este if
                 where += ' AND '
+    sql = "SELECT COUNT (*) as TOTAL from reservas" + where 
+    
+    filas = ejecutar_consulta (sql, query_params)
+    return filas [0] ['total']
     
     
 # funciones del metodo POST

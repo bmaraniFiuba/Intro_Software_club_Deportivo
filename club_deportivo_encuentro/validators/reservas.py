@@ -1,7 +1,32 @@
 from datetime import datetime
 from ..constants import (ZONA_GMT3, FORMATO_FECHA_HORA)
-from ..constants import ESTADOS_VALIDOS, ERROR_CODE_INVALID_BODY, ERROR_CODE_ESTADO_INVALIDO
-from ..utils import construir_error_api
+from ..constants import ERROR_CODE_INVALID_BODY, ERROR_CODE_ESTADO_INVALIDO, FORMATO_FECHA
+from ..utils import construir_error_api, validar_formato_fecha
+
+
+ESTADOS_VALIDOS = ["confirmada", "cancelada", "finalizada"]
+
+def validar_rago_fechas (fecha_desde: str, fecha_hasta:str):
+    fecha_desde_validada = None
+    fecha_hasta_validada = None
+    
+    if fecha_desde is not None:
+        fecha_desde_validada = validar_formato_fecha (fecha_desde, FORMATO_FECHA,'fecha_desde')
+        
+    if fecha_hasta is not None:
+        fecha_hasta_validada = validar_formato_fecha (fecha_hasta, FORMATO_FECHA,'fecha_hasta')
+    
+    if fecha_desde is not None and fecha_hasta is not None:
+        if fecha_desde_validada > fecha_hasta_validada:
+            raise ValueError (construir_error_api (
+                code= "invalid_rangoFechas"
+                message= "el rango de fechas es invalido"
+                description="la fecha_desde debe ser menor a la fecha_hasta"
+            ), 400)
+    return fecha_desde, fecha_hasta
+        
+    
+        
 
 
 def validar_y_convertir_fecha(fecha_texto, nombre_campo):

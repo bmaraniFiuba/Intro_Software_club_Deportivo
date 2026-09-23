@@ -5,6 +5,7 @@ from datetime import datetime, timezone, timedelta
 load_dotenv()
 
 #Formato fecha y hora ISO 8601 con zona horaria GMT-3
+FORMATO_FECHA = '%Y-%m-%d' 
 FORMATO_FECHA_HORA = "%Y-%m-%dT%H:%M:%S.%f-03:00"    # El %f fuerza los 6 dígitos de fracción de segundo. Y el -03:00 fuerza la zona horaria GMT-3.
 ZONA_GMT3 = timezone(timedelta(hours=-3))
 
