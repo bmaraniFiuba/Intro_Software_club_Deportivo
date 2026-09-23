@@ -6,6 +6,15 @@ from ..utils import construir_error_api, validar_formato_fecha
 
 ESTADOS_VALIDOS = ["confirmada", "cancelada", "finalizada"]
 
+def validar_estado (estado):
+    if estado not in ESTADOS_VALIDOS:
+        raise ValueError(construir_error_api(
+            code= ERROR_CODE_ESTADO_INVALIDO,
+            message= 'Introduzca un estado valido',
+            description= "El estado no pertenece a 'ESTADOS_VALIDOS'"
+            
+        ), 400)
+
 def validar_rago_fechas (fecha_desde: str, fecha_hasta:str):
     fecha_desde_validada = None
     fecha_hasta_validada = None
@@ -19,13 +28,11 @@ def validar_rago_fechas (fecha_desde: str, fecha_hasta:str):
     if fecha_desde is not None and fecha_hasta is not None:
         if fecha_desde_validada > fecha_hasta_validada:
             raise ValueError (construir_error_api (
-                code= "invalid_rangoFechas"
-                message= "el rango de fechas es invalido"
+                code= "invalid_rangoFechas",
+                message= "el rango de fechas es invalido",
                 description="la fecha_desde debe ser menor a la fecha_hasta"
             ), 400)
     return fecha_desde, fecha_hasta
-        
-    
         
 
 

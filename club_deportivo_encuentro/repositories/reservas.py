@@ -85,7 +85,7 @@ def contar_reservas (filtros: dict) -> int:
                 where += ' AND '
     sql = "SELECT COUNT (*) as TOTAL from reservas" + where 
     
-    filas = ejecutar_consulta (sql, query_params)
+    filas = ejecutar_consulta (sql, query_params) #es una lista con un solo diccionario de la forma [{"total": valor}]
     return filas [0] ['total']
     
     
