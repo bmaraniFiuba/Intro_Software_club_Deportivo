@@ -95,7 +95,11 @@ def validar_body_crear_reserva(body):
 
 # Revisar función:
 
-CAMPOS_FILTRO_RESERVAS = {'id_cancha', 'id_socio', 'estado', 'fecha_desde', 'fecha_hasta', '_limit', '_offset'}
+CAMPOS_FILTRO_RESERVAS = {
+    'id_cancha', 'id_socio', 'estado', 'fecha_desde', 'fecha_hasta',
+    '_limit', '_offset',
+}
+
 
 def validar_filtros_reservas(parametros):
     desconocidos = set(parametros.keys()) - CAMPOS_FILTRO_RESERVAS
@@ -107,15 +111,21 @@ def validar_filtros_reservas(parametros):
         ), 400)
 
     filtros = {}
-    for campo in ('id_cancha', 'id_socio'):
-        if campo in parametros:
-            filtros[campo] = validar_entero_estricto(parametros[campo], campo)
+
+    if 'id_cancha' in parametros:
+        filtros['id_cancha'] = validar_entero_estricto(parametros['id_cancha'], 'id_cancha')
+
+    if 'id_socio' in parametros:
+        filtros['id_socio'] = validar_entero_estricto(parametros['id_socio'], 'id_socio')
 
     if 'estado' in parametros:
-        validar_estado(parametros['estado'])
-        filtros['estado'] = parametros['estado']
+        estado = parametros['estado']
+        validar_estado(estado)
+        filtros['estado'] = estado
 
-    fecha_desde, fecha_hasta = validar_rago_fechas(parametros.get('fecha_desde'), parametros.get('fecha_hasta'))
+    fecha_desde, fecha_hasta = validar_rago_fechas(
+        parametros.get('fecha_desde'), parametros.get('fecha_hasta')
+    )
     if fecha_desde is not None:
         filtros['fecha_desde'] = fecha_desde
     if fecha_hasta is not None:
