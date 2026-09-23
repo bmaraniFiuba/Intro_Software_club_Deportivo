@@ -73,7 +73,7 @@ def contar_reservas (filtros: dict) -> int:
         query_params['fecha_desde'] = filtros['fecha_desde']
         
     if filtros.get('fecha_hasta') is not None:
-        cond.append('fecha_hora_inicio <  :fecha_hasta')
+        cond.append('fecha_hora_inicio <=  :fecha_hasta')
         query_params['fecha_hasta'] = filtros['fecha_hasta']
         
     where = ""
