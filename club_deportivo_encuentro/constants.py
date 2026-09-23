@@ -22,7 +22,7 @@ DB_PASSWORD = os.getenv('DB_PASSWORD', 'root')
 DB_NAME     = os.getenv('DB_NAME', 'Club_Deportivo')
 DB_URL      = f'mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
 
-# Codigos de error, obviamente cambiarlos
+# Codigos de error
 ERROR_CODE_INVALID_BODY        = 'invalid.body'
 ERROR_CODE_INVALID_MIN_VALUE   = 'invalid.min.value'
 ERROR_CODE_INVALID_MAX_VALUE   = 'invalid.max.value'
@@ -32,6 +32,8 @@ ERROR_CODE_RESERVA_NOT_FOUND   = 'reserva.not.found'
 ERROR_CODE_SOLAPAMIENTO        = 'reserva.overlap'
 ERROR_CODE_ESTADO_INVALIDO     = 'reserva.estado.invalid'
 ERROR_CODE_TRANSICION_INVALIDA = 'reserva.estado.transition.not.allowed'
+ERROR_CODE_PARAMETRO_DESCONOCIDO = 'invalid.parameter.unknown'
+ERROR_CODE_INTERNAL            = 'internal.error'
 
 
 # Horarios de atención y duración

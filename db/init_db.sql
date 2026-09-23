@@ -21,7 +21,7 @@ CREATE TABLE canchas (
     id_deporte INT NOT NULL,
     nombre VARCHAR(30) NOT NULL,
     precio_hora INT NOT NULL,
-    techada BOOLEAN NOT NULL DEFAULT FA    Invoke-RestMethod "http://127.0.0.1:8080/club_deportivo_encuentro/canchas/1"    Invoke-RestMethod "http://127.0.0.1:8080/club_deportivo_encuentro/canchas/1"LSE,
+    techada BOOLEAN NOT NULL DEFAULT FALSE,
     activa BOOLEAN NOT NULL DEFAULT TRUE,
 
     FOREIGN KEY (id_deporte) REFERENCES deportes(id)

@@ -171,9 +171,9 @@ def validar_paginacion(parametros) -> tuple[int, int]:
     else:
         limit_crudo = PAGINACION_LIMIT_DEFAULT
         
-    limit = validar_entero_estricto (limit_crudo, PARAMETRO_LIMIT) 
-    limit = validar_minimo(limit_crudo, PAGINACION_LIMIT_MINIMO, PARAMETRO_LIMIT)
-    limit = validar_maximo(limit_crudo, PAGINACION_LIMIT_MAXIMO, PARAMETRO_LIMIT)
+    limit = validar_entero_estricto(limit_crudo, PARAMETRO_LIMIT)
+    limit = validar_minimo(limit, PAGINACION_LIMIT_MINIMO, PARAMETRO_LIMIT)
+    limit = validar_maximo(limit, PAGINACION_LIMIT_MAXIMO, PARAMETRO_LIMIT)
  
     #VALIDO EL OFFSET
     if parametros.get(PARAMETRO_OFFSET) is not None:
@@ -198,3 +198,12 @@ def respuesta_paginada(clave: str, registros: list[dict], total: int, limit: int
  
     links = construir_links(request.base_url, request.args.to_dict(), total, limit, offset)
     return jsonify({clave: registros, '_links': links}), 200
+
+
+def cambiar_formato_booleano(fila):
+    """Convierte el campo activo de MySQL a booleano de Python."""
+    if not fila:
+        return None
+
+    fila['activo'] = bool(fila['activo'])
+    return fila

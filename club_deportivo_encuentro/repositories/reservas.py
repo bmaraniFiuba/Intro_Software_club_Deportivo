@@ -73,7 +73,7 @@ def contar_reservas (filtros: dict) -> int:
         query_params['fecha_desde'] = filtros['fecha_desde']
         
     if filtros.get('fecha_hasta') is not None:
-        cond.append('fecha_hora_inicio <  :fecha_hasta')
+        cond.append('fecha_hora_inicio <=  :fecha_hasta')
         query_params['fecha_hasta'] = filtros['fecha_hasta']
         
     where = ""
@@ -83,7 +83,7 @@ def contar_reservas (filtros: dict) -> int:
             where += cond[condicion]
             if condicion < len(cond) - 1: ## si no es el ultimo elemento de la lista, etra a este if
                 where += ' AND '
-    sql = "SELECT COUNT (*) as TOTAL from reservas" + where 
+    sql = "SELECT COUNT(*) as total from reservas" + where 
     
     filas = ejecutar_consulta (sql, query_params) #es una lista con un solo diccionario de la forma [{"total": valor}]
     return filas [0] ['total']
@@ -91,6 +91,7 @@ def contar_reservas (filtros: dict) -> int:
     
 # funciones del metodo POST
 def existe_superposicion_cancha(id_cancha: int, inicio, fin) -> bool:
+    # Busca si la cancha ya tiene una reserva confirmada que se pise con el horario pedido.
     SQL = """
         SELECT 1 FROM reservas
         WHERE id_cancha = :id_cancha
@@ -107,6 +108,7 @@ def existe_superposicion_cancha(id_cancha: int, inicio, fin) -> bool:
     return len(resultado) > 0
 
 def existe_superposicion_socio(id_socio: int, inicio, fin) -> bool:
+    # se fija que el socio no tenga otra reserva confirmada en el mismo horario
     SQL = """
         SELECT 1 FROM reservas
         WHERE id_socio = :id_socio
@@ -129,6 +131,7 @@ def crear(datos: dict) -> dict:
         VALUES
             (:id_socio, :id_cancha, :fecha_hora_inicio, :fecha_hora_fin, :estado, :precio_hora, :precio_total)
     """
+    # Se le saca la zona horaria a las fechas porque la collumna en la DB la tiene como datatime sin zona horaria GMT-3
     nuevo_id = ejecutar_escritura(SQL, {
         **datos,
         "fecha_hora_inicio": datos["fecha_hora_inicio"].replace(tzinfo=None),
@@ -147,4 +150,5 @@ def crear(datos: dict) -> dict:
     }
     
 def _formatear_fecha(dt) -> str:
+    # Convierte un datetime al formato de fecha GMT-3
     return dt.strftime(FORMATO_FECHA_HORA)

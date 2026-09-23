@@ -1,4 +1,4 @@
-from club_deportivo_encuentro.repositories import deportes as repository
+from ..repositories import deportes as repository
 
 
 def obtener_deportes():
