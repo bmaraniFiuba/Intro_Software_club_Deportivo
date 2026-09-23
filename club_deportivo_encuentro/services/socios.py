@@ -11,6 +11,26 @@ ERROR_CODE_SOCIO_EMAIL_DUPLICADO = 'socio.email.duplicate'
 def obtener_socios(filtros):
     return repository.obtener_socios(filtros)
 
+def crear_socio(data):
+    error_email = construir_error_api(
+        code=ERROR_CODE_SOCIO_EMAIL_DUPLICADO,
+        message='Email ya registrado',
+        description='El email indicado ya pertenece a un socio',
+    )
+
+    if repository.existe_email(data['email']):
+        raise ValueError(error_email, 409)
+
+    datos = dict(data)
+    datos['activo'] = True
+
+    try:
+        return repository.crear_socio(datos)
+    except IntegrityError as error:
+        if getattr(error.orig, 'errno', None) == 1072:
+            raise ValueError(error_email, 409) from error
+        raise
+
 
 def obtener_socio_por_id(id_socio):
     socio = repository.obtener_por_id(id_socio)
