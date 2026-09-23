@@ -150,6 +150,11 @@ def obtener_reserva_por_id(id_reserva: int):
         ), 404)
     return reserva
 
+def obtener_reservas(filtros: dict, limit: int, offset: int):
+    total = reservas_repo.contar_reservas(filtros)
+    reservas = reservas_repo.obtener_reservas(filtros, offset, limit)
+    return reservas, total
+
 
 def cambiar_estado_reserva(id_reserva: int, nuevo_estado: str):
     reserva = obtener_reserva_por_id(id_reserva)
