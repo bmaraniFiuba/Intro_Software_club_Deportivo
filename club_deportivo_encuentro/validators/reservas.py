@@ -1,7 +1,7 @@
 from datetime import datetime
 from ..constants import (ZONA_GMT3, FORMATO_FECHA_HORA)
 from ..constants import ERROR_CODE_INVALID_BODY, ERROR_CODE_ESTADO_INVALIDO, FORMATO_FECHA
-from ..utils import construir_error_api, validar_formato_fecha
+from ..utils import construir_error_api, validar_formato_fecha, validar_entero_estricto
 
 
 ESTADOS_VALIDOS = ["confirmada", "cancelada", "finalizada"]
@@ -92,6 +92,36 @@ def validar_body_crear_reserva(body):
         "fecha_hora_inicio": validar_y_convertir_fecha(body["fecha_hora_inicio"], "fecha_hora_inicio"),
         "fecha_hora_fin": validar_y_convertir_fecha(body["fecha_hora_fin"], "fecha_hora_fin"),
     }
+
+# Revisar función:
+
+CAMPOS_FILTRO_RESERVAS = {'id_cancha', 'id_socio', 'estado', 'fecha_desde', 'fecha_hasta', '_limit', '_offset'}
+
+def validar_filtros_reservas(parametros):
+    desconocidos = set(parametros.keys()) - CAMPOS_FILTRO_RESERVAS
+    if desconocidos:
+        raise ValueError(construir_error_api(
+            code='invalid.parameters',
+            message='Parámetros no reconocidos',
+            description=f"Parámetros no reconocidos: {', '.join(sorted(desconocidos))}",
+        ), 400)
+
+    filtros = {}
+    for campo in ('id_cancha', 'id_socio'):
+        if campo in parametros:
+            filtros[campo] = validar_entero_estricto(parametros[campo], campo)
+
+    if 'estado' in parametros:
+        validar_estado(parametros['estado'])
+        filtros['estado'] = parametros['estado']
+
+    fecha_desde, fecha_hasta = validar_rago_fechas(parametros.get('fecha_desde'), parametros.get('fecha_hasta'))
+    if fecha_desde is not None:
+        filtros['fecha_desde'] = fecha_desde
+    if fecha_hasta is not None:
+        filtros['fecha_hasta'] = fecha_hasta
+
+    return filtros
 
 
 #AGREGO(se puede reacomodar)
