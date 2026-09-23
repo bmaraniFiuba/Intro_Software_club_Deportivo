@@ -31,6 +31,31 @@ def obtener_socios(filtros):
 
     return [cambiar_formato_booleano(fila) for fila in filas], total
 
+def existe_email(email, id_socio=None):
+    """Indica si el email ya pertenece a un socio."""
+    sql = 'SELECT id FROM socios WHERE email = :email'
+    params = {'email': email}
+
+    if id_socio is not None:
+        sql += ' AND id <> :id_socio'
+        params['id_socio'] = id_socio
+
+    filas = ejecutar_consulta(sql + ' LIMIT 1', params)
+    return bool(filas)
+
+def crear_socio(data):
+    """Inserta un socio y devuelve el registro creado."""
+    nuevo_id = ejecutar_escritura(
+        'INSERT INTO socios (nombre, email, activo) '
+        'VALUES (:nombre, :email, :activo)',
+        {
+            'nombre': data['nombre'],
+            'email': data['email'],
+            'activo': data['activo'],
+        },
+    )
+
+    return obtener_por_id(nuevo_id)
 
 def obtener_por_id(id_socio):
     """Obtiene un socio por id. Retorna None si no existe."""

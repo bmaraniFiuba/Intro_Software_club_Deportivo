@@ -83,6 +83,9 @@ def _validar_fechas(fecha_inicio: datetime, fecha_fin: datetime):
 
 
 def crear_reserva(id_socio: int, id_cancha: int, fecha_hora_inicio: str, fecha_hora_fin: str):    
+    fecha_hora_inicio = asegurar_aware_datetime(fecha_hora_inicio)
+    fecha_hora_fin = asegurar_aware_datetime(fecha_hora_fin)
+    
     # 1. Validar reglas de horario
     _validar_fechas(fecha_hora_inicio, fecha_hora_fin)
 
@@ -173,8 +176,8 @@ def cambiar_estado_reserva(id_reserva: int, nuevo_estado: str):
         return reserva
 
     ahora = datetime.now(ZONA_GMT3)
-    inicio = reserva["fecha_hora_inicio"]
-    fin = reserva["fecha_hora_fin"]
+    inicio = asegurar_aware_datetime(reserva["fecha_hora_inicio"])
+    fin = asegurar_aware_datetime(reserva["fecha_hora_fin"])
 
     
      # Regla 1: Confirmada -> Cancelada (solo si no empezó)
