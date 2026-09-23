@@ -45,7 +45,7 @@ def obtener_reservas (filtros: dict, offset:int, limit:int) -> list[dict]:
     query_params["limit"] = limit
     query_params["offset"] = offset 
     
-    return ejecutar_consulta(SQL, query_params) # sqlalchemy agarra :id_socio y lo relaciona con ej "id_socio": 5
+    return [_formatear_reserva(fila) for fila in ejecutar_consulta(SQL, query_params)]
 
 def contar_reservas (filtros: dict) -> int:
     cond = [] 
@@ -69,11 +69,11 @@ def contar_reservas (filtros: dict) -> int:
         query_params["estado"] = filtros["estado"]
     
     if filtros.get('fecha_desde') is not None:
-        cond.append('fecha_hora_inicio >= :fecha_desde')
+        cond.append('DATE(fecha_hora_inicio) >= :fecha_desde')
         query_params['fecha_desde'] = filtros['fecha_desde']
         
     if filtros.get('fecha_hasta') is not None:
-        cond.append('fecha_hora_inicio <=  :fecha_hasta')
+        cond.append('DATE(fecha_hora_inicio) <= :fecha_hasta')
         query_params['fecha_hasta'] = filtros['fecha_hasta']
         
     where = ""
@@ -138,17 +138,38 @@ def crear(datos: dict) -> dict:
         "fecha_hora_fin": datos["fecha_hora_fin"].replace(tzinfo=None),
     })
 
-    return {
+    return _formatear_reserva({
         "id": nuevo_id,
         "id_socio": datos["id_socio"],
         "id_cancha": datos["id_cancha"],
-        "fecha_hora_inicio": _formatear_fecha(datos["fecha_hora_inicio"]),
-        "fecha_hora_fin": _formatear_fecha(datos["fecha_hora_fin"]),
+        "fecha_hora_inicio": datos["fecha_hora_inicio"],
+        "fecha_hora_fin": datos["fecha_hora_fin"],
         "estado": datos["estado"],
         "precio_hora": datos["precio_hora"],
         "precio_total": datos["precio_total"],
-    }
-    
-def _formatear_fecha(dt) -> str:
+    })
+
+
+#Funcion para el metodo GET por id
+def obtener_por_id(id_reserva: int) -> dict | None:
+    SQL = """
+        SELECT id, id_socio, id_cancha, estado,
+               fecha_hora_inicio, fecha_hora_fin, precio_hora, precio_total
+        FROM reservas
+        WHERE id = :id
+    """
+    filas = ejecutar_consulta(SQL, {"id": id_reserva})
+
+    if not filas:
+        return None  # el service lo usa para responder 404
+
+    return _formatear_reserva(filas[0])
+
+
+#Funciones para formatear los datos que vienen de la DB
+def _formatear_reserva(fila: dict) -> dict:
     # Convierte un datetime al formato de fecha GMT-3
-    return dt.strftime(FORMATO_FECHA_HORA)
+    reserva = dict(fila)
+    reserva["fecha_hora_inicio"] = reserva["fecha_hora_inicio"].strftime(FORMATO_FECHA_HORA)
+    reserva["fecha_hora_fin"] = reserva["fecha_hora_fin"].strftime(FORMATO_FECHA_HORA)
+    return reserva
