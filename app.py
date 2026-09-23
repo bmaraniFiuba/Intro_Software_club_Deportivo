@@ -1,5 +1,6 @@
 from flask import Flask, jsonify
 from club_deportivo_encuentro.constants import BASE_URL
+from club_deportivo_encuentro.utils import construir_error_api
 
 # Se definen los blueprints de cada recurso
 from club_deportivo_encuentro.routes.socios import socios_bp
