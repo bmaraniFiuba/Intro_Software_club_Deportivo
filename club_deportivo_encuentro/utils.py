@@ -198,3 +198,12 @@ def respuesta_paginada(clave: str, registros: list[dict], total: int, limit: int
  
     links = construir_links(request.base_url, request.args.to_dict(), total, limit, offset)
     return jsonify({clave: registros, '_links': links}), 200
+
+
+def cambiar_formato_booleano(fila):
+    """Convierte el campo activo de MySQL a booleano de Python."""
+    if not fila:
+        return None
+
+    fila['activo'] = bool(fila['activo'])
+    return fila
