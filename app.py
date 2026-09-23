@@ -20,4 +20,14 @@ app.register_blueprint(reservas_bp, url_prefix=BASE_URL)
 def ping():
     return jsonify({"mensaje": "API del Club Deportivo en línea"}), 200
 
+# Maneja error si se ingresa URL q no existe
+@app.errorhandler(404)
+def manejar_404(error):
+    return jsonify(construir_error_api(
+        code='resource.not.found',
+        message='Recurso no encontrado',
+        description='La URL solicitada no existe.',
+    )), 404
+
+
 app.run(host="0.0.0.0", port=8080, debug=True)
