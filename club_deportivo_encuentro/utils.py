@@ -32,7 +32,7 @@ def construir_error_api(code: str, message: str, description: str, level: str = 
 
 def validar_formato_fecha(fecha: str, formato: str, nombre: str = 'fecha') -> datetime:
     try:
-        return datetime.strptime(fecha, formato)
+        return datetime.strptime(fecha, formato) # Intenta transformar el texto (fecha) en una fecha real usando el formato que le des.
     except ValueError:
         logger.warning(f"Formato de fecha invalido: '{fecha}' no cumple el formato '{formato}'")
 
@@ -112,7 +112,7 @@ def validar_entero_estricto(valor, nombre: str) -> int:
         ))
  
  
- 
+# ---------------- PAGINACION -----------------------------------
 def construir_links(url_base: str, parametros: dict, total: int, limit: int, offset: int) -> dict:
     """Arma el objeto '_links' de HATEOAS para un listado paginado.
  

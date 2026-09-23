@@ -33,11 +33,6 @@ ERROR_CODE_SOLAPAMIENTO        = 'reserva.overlap'
 ERROR_CODE_ESTADO_INVALIDO     = 'reserva.estado.invalid'
 ERROR_CODE_TRANSICION_INVALIDA = 'reserva.estado.transition.not.allowed'
 
-#Estados de reserva
-ESTADO_CONFIRMADA = 'confirmada'
-ESTADO_CANCELADA = 'cancelada'
-ESTADO_FINALIZADA = 'finalizada'
-ESTADOS_VALIDOS = {ESTADO_CONFIRMADA, ESTADO_CANCELADA, ESTADO_FINALIZADA}
 
 # Horarios de atención y duración
 HORA_APERTURA = 8

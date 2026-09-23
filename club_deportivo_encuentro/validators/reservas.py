@@ -7,6 +7,10 @@ from ..utils import construir_error_api, validar_formato_fecha
 ESTADOS_VALIDOS = ["confirmada", "cancelada", "finalizada"]
 
 def validar_estado (estado):
+    
+    if estado in None:
+        return None
+    
     if estado not in ESTADOS_VALIDOS:
         raise ValueError(construir_error_api(
             code= ERROR_CODE_ESTADO_INVALIDO,
@@ -14,6 +18,8 @@ def validar_estado (estado):
             description= "El estado no pertenece a 'ESTADOS_VALIDOS'"
             
         ), 400)
+        
+    return estado
 
 def validar_rago_fechas (fecha_desde: str, fecha_hasta:str):
     fecha_desde_validada = None
