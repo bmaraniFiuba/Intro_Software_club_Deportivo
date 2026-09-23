@@ -83,7 +83,7 @@ def contar_reservas (filtros: dict) -> int:
             where += cond[condicion]
             if condicion < len(cond) - 1: ## si no es el ultimo elemento de la lista, etra a este if
                 where += ' AND '
-    sql = "SELECT COUNT (*) as TOTAL from reservas" + where 
+    sql = "SELECT COUNT(*) as total from reservas" + where 
     
     filas = ejecutar_consulta (sql, query_params) #es una lista con un solo diccionario de la forma [{"total": valor}]
     return filas [0] ['total']
