@@ -43,6 +43,20 @@ def existe_email(email, id_socio=None):
     filas = ejecutar_consulta(sql + ' LIMIT 1', params)
     return bool(filas)
 
+def crear_socio(data):
+    """Inserta un socio y devuelve el registro creado."""
+    nuevo_id = ejecutar_escritura(
+        'INSERT INTO socios (nombre, email, activo) '
+        'VALUES (:nombre, :email, :activo)',
+        {
+            'nombre': data['nombre'],
+            'email': data['email'],
+            'activo': data['activo'],
+        },
+    )
+
+    return obtener_por_id(nuevo_id)
+
 def obtener_por_id(id_socio):
     """Obtiene un socio por id. Retorna None si no existe."""
     filas = ejecutar_consulta(
