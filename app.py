@@ -1,5 +1,7 @@
 from flask import Flask, jsonify
 from club_deportivo_encuentro.constants import BASE_URL
+
+# Se definen los blueprints de cada recurso
 from club_deportivo_encuentro.routes.socios import socios_bp
 from club_deportivo_encuentro.routes.deportes import deportes_bp
 from club_deportivo_encuentro.routes.canchas import canchas_bp
@@ -7,11 +9,13 @@ from club_deportivo_encuentro.routes.reservas import reservas_bp
 
 app = Flask(__name__)
 
+# Conexión de los blueprints con Flask
 app.register_blueprint(socios_bp, url_prefix=BASE_URL)
 app.register_blueprint(deportes_bp, url_prefix=BASE_URL)
 app.register_blueprint(canchas_bp, url_prefix=BASE_URL)
 app.register_blueprint(reservas_bp, url_prefix=BASE_URL)
 
+# Función para probar que servidor esté activo
 @app.route("/")
 def ping():
     return jsonify({"mensaje": "API del Club Deportivo en línea"}), 200
