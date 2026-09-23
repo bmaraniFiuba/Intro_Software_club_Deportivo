@@ -21,7 +21,16 @@ def get_socios():
 
 @socios_bp.route('/socios', methods=['POST'])
 def post_socio():
-    return
+    data = request.get_json(silent=True)
+
+    try:
+        data = validator.validar_body_crear_socio(data)
+        socio = service.crear_socio(data)
+    except ValueError as error:
+        status = error.args[1] if len(error.args) > 1 else 400
+        return jsonify(error.args[0]), status
+
+    return jsonify(socio), 201
 
 @socios_bp.route('/socios/<int:id_socio>', methods=['GET'])
 def get_socio_id(id_socio):
