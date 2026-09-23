@@ -53,6 +53,7 @@ def validar_y_convertir_fecha(fecha_texto, nombre_campo):
     return fecha_obj.replace(tzinfo=ZONA_GMT3)
 
 def validar_entero_positivo(valor, nombre_campo):
+    # Rechaza el valor si no es un int, si es un bool o si es cero o negativo.
     if not isinstance(valor, int) or isinstance(valor, bool) or valor <= 0:
         raise ValueError(construir_error_api(
             code=f'invalid.{nombre_campo}.format',
@@ -62,6 +63,7 @@ def validar_entero_positivo(valor, nombre_campo):
     return valor
 
 def validar_body_crear_reserva(body):
+    # El body tiene que ser un objeto JSON y no puede venir vacío
     if not isinstance(body, dict) or not body:
         raise ValueError(construir_error_api(
             code='invalid.body',
@@ -70,6 +72,8 @@ def validar_body_crear_reserva(body):
         ), 400)
 
     campos_esperados = {"id_socio", "id_cancha", "fecha_hora_inicio", "fecha_hora_fin"}
+    
+    # Rechaza campos que no están en la lista de esperados
     desconocidos = set(body.keys()) - campos_esperados
     if desconocidos:
         raise ValueError(construir_error_api(
@@ -78,6 +82,7 @@ def validar_body_crear_reserva(body):
             description=f"Campos no reconocidos: {', '.join(sorted(desconocidos))}",
         ), 400)
 
+    # Verifica que estén todos los campos obligatorios
     faltantes = campos_esperados - set(body.keys())
     if faltantes:
         raise ValueError(construir_error_api(
