@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 def validar_listado_deportes(parametros) -> None:
     
     if parametros:
-        desconocidos = ", ".join(sorted(parametros.key()))
+        desconocidos = ", ".join(sorted(parametros.keys()))
         logger.warning(f"Parametros desconocidos en /deportes: {desconocidos}")
         
         raise ValueError(construir_error_api(
