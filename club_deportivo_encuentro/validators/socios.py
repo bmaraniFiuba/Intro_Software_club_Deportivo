@@ -34,7 +34,7 @@ def validar_email(email_socio):
                 description=f"El valor '{email_socio}' no cumple el formato esperado de email"
             ))
         else:
-            return email_socio
+            return email
     else:
         raise ValueError(construir_error_api(
             code='missing.email',
