@@ -3,7 +3,7 @@ from ..constants import FORMATO_FECHA_HORA
 
 
 #funciones para metodo GET
-def obtener_reservas (filtros: dict, offset:int, limit:int) -> list[dict]:
+def obtener_reservas (filtros: dict, limit:int, offset:int) -> list[dict]:
     cond = [] #lo uso para generar la consulta a la base de datos
     query_params = {}
     

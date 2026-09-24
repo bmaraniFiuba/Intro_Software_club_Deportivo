@@ -29,6 +29,27 @@ docker-compose up -d
 # Detener el contenedor
 docker-compose down
 ```
+#ver si la base esta corriendo
+docker compose ps
+
+#ver las tablas de la base
+docker exec -i mysql-club mysql -u root -proot -e "SHOW TABLES FROM Club_Deportivo;"
+
+#entrar al modo iteractivo para visualizar el contenido de las tablas
+docker exec -it mysql-club mysql -u root -p ---> (ingresar root como contrasena)
+
+#luego en el modo interactivo seleccionar
+USE Club_Deportivo
+SHOW TABLES;
+
+#para ver el contenido de una tabla especifica:
+SELECT * FROM <nombre de tabla>;
+
+
+
+
+
+
 
 ---
 

@@ -4,6 +4,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from ..services.reservas import crear_reserva, cambiar_estado_reserva, obtener_reserva_por_id, obtener_reservas_services
 from ..validators.reservas import validar_body_crear_reserva, validar_body_cambiar_estado, validar_filtros_reservas, validar_estado, validar_rago_fechas
 from ..utils import validar_paginacion, respuesta_paginada
+from ..repositories.reservas import obtener_reservas, contar_reservas
 
 
 
@@ -36,8 +37,10 @@ def get_reservas():
         "fecha_hasta" : fecha_hasta
     }
     
-    reservas, total = obtener_reservas_services (filtros, limit, offset) # los casilleros :algo obtienen su valor de filtros
-    
+    # reservas, total = obtener_reservas_services(filtros, limit, offset)  ----> no anda bien
+    reservas = obtener_reservas(filtros,limit,offset) # los casilleros :algo obtienen su valor de filtros
+    total = contar_reservas (filtros)
+
     return respuesta_paginada("reservas", reservas,total,limit,offset) #aca devuelvo codigo 200 o 204
     
 
