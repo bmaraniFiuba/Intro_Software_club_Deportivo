@@ -65,3 +65,12 @@ def obtener_por_id(id_socio):
     )
 
     return cambiar_formato_booleano(filas[0]) if filas else None
+
+def actualizar_socio(id_socio, data):
+    campos, params = [], {'id': id_socio}
+    for campo in ('nombre', 'email', 'activo'):
+        if campo in data:
+            campos.append(f'{campo} = :{campo}')
+            params[campo] = data[campo]
+    if campos:
+        ejecutar_escritura('UPDATE socios SET ' + ', '.join(campos) + ' WHERE id = :id', params)
