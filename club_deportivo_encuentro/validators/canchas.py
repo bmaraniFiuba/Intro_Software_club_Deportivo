@@ -8,12 +8,18 @@ def _validar_datos_cancha(data, parcial):
     if not isinstance(data, dict):
         raise ValueError(construir_error_api('invalid.body', 'JSON inválido', 'El cuerpo debe ser un objeto JSON.'))
     errores = []
+    
+    # Permite 'id_deporte' en la creación (cuando parcial es False)
+    campos_permitidos = ('nombre', 'precio_hora', 'techada', 'activa') if parcial else ('nombre', 'id_deporte', 'precio_hora', 'techada', 'activa')
+    
     for campo in data:
-        if campo not in ('nombre', 'precio_hora', 'techada', 'activa'):
+        if campo not in campos_permitidos:
             if parcial:
                 errores.append(f"El campo '{campo}' no se puede modificar.")
             else:
                 errores.append(f"El campo '{campo}' no es un campo válido.")
+
+
     if not parcial or 'nombre' in data:
         nombre = data.get('nombre')
         if not isinstance(nombre, str) or not nombre.strip():
