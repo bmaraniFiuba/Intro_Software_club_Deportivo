@@ -45,15 +45,7 @@ def obtener_reservas (filtros: dict, limit:int, offset:int) -> list[dict]:
     query_params["limit"] = limit
     query_params["offset"] = offset 
     
-    return [_formatear_reserva(fila) for fila in ejecutar_consulta(SQL, query_params)]
-
-def obtener_por_id(id_reserva: int) -> dict | None:
-    SQL = "SELECT * FROM reservas WHERE id = :id_reserva"
-    resultado = ejecutar_consulta(SQL, {"id_reserva": id_reserva})
-    if not resultado:
-        return None
-    return resultado[0]
-
+    return [formatear_reserva(fila) for fila in ejecutar_consulta(SQL, query_params)]
 
 def actualizar_estado(id_reserva: int, nuevo_estado: str) -> None:
     SQL = "UPDATE reservas SET estado = :estado WHERE id = :id_reserva"
@@ -104,6 +96,7 @@ def contar_reservas (filtros: dict) -> int:
     
 # funciones del metodo POST
 def existe_superposicion_cancha(id_cancha: int, inicio, fin) -> bool:
+    # Busca si la cancha ya tiene una reserva confirmada que se pise con el horario pedido.
     SQL = """
         SELECT 1 FROM reservas
         WHERE id_cancha = :id_cancha
@@ -120,6 +113,7 @@ def existe_superposicion_cancha(id_cancha: int, inicio, fin) -> bool:
     return len(resultado) > 0
 
 def existe_superposicion_socio(id_socio: int, inicio, fin) -> bool:
+    # se fija que el socio no tenga otra reserva confirmada en el mismo horario
     SQL = """
         SELECT 1 FROM reservas
         WHERE id_socio = :id_socio
@@ -142,18 +136,19 @@ def crear(datos: dict) -> dict:
         VALUES
             (:id_socio, :id_cancha, :fecha_hora_inicio, :fecha_hora_fin, :estado, :precio_hora, :precio_total)
     """
+     # Se le saca la zona horaria a las fechas porque la collumna en la DB la tiene como datatime sin zona horaria GMT-3
     nuevo_id = ejecutar_escritura(SQL, {
         **datos,
         "fecha_hora_inicio": datos["fecha_hora_inicio"].replace(tzinfo=None),
         "fecha_hora_fin": datos["fecha_hora_fin"].replace(tzinfo=None),
     })
 
-    return {
+    return formatear_reserva({
         "id": nuevo_id,
         "id_socio": datos["id_socio"],
         "id_cancha": datos["id_cancha"],
-        "fecha_hora_inicio": _formatear_fecha(datos["fecha_hora_inicio"]),
-        "fecha_hora_fin": _formatear_fecha(datos["fecha_hora_fin"]),
+        "fecha_hora_inicio": datos["fecha_hora_inicio"],
+        "fecha_hora_fin": datos["fecha_hora_fin"],
         "estado": datos["estado"],
         "precio_hora": datos["precio_hora"],
         "precio_total": datos["precio_total"],
@@ -173,11 +168,11 @@ def obtener_por_id(id_reserva: int) -> dict | None:
     if not filas:
         return None  # el service lo usa para responder 404
 
-    return _formatear_reserva(filas[0])
+    return formatear_reserva(filas[0])
 
 
-#Funciones para formatear los datos que vienen de la DB
-def _formatear_reserva(fila: dict) -> dict:
+#Funcions para formatear los datos que vienen de la DB
+def formatear_reserva(fila: dict) -> dict:
     # Convierte un datetime al formato de fecha GMT-3
     reserva = dict(fila)
     reserva["fecha_hora_inicio"] = reserva["fecha_hora_inicio"].strftime(FORMATO_FECHA_HORA)

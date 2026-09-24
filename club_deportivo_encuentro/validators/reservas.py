@@ -72,7 +72,7 @@ def validar_body_crear_reserva(body):
     # El body tiene que ser un objeto JSON y no puede venir vacío
     if not isinstance(body, dict) or not body:
         raise ValueError(construir_error_api(
-            code='invalid.body',
+            code=ERROR_CODE_INVALID_BODY,
             message='Cuerpo inválido',
             description='El cuerpo debe ser un objeto JSON no vacío',
         ), 400)
@@ -83,7 +83,7 @@ def validar_body_crear_reserva(body):
     desconocidos = set(body.keys()) - campos_esperados
     if desconocidos:
         raise ValueError(construir_error_api(
-            code='invalid.body',
+            code=ERROR_CODE_INVALID_BODY,
             message='Campos no reconocidos',
             description=f"Campos no reconocidos: {', '.join(sorted(desconocidos))}",
         ), 400)
@@ -92,7 +92,7 @@ def validar_body_crear_reserva(body):
     faltantes = campos_esperados - set(body.keys())
     if faltantes:
         raise ValueError(construir_error_api(
-            code='invalid.body',
+            code=ERROR_CODE_INVALID_BODY,
             message='Faltan campos obligatorios',
             description=f"Faltan campos obligatorios: {', '.join(sorted(faltantes))}",
         ), 400)

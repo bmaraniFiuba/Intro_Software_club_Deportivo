@@ -1,7 +1,5 @@
 from flask import Blueprint, request, jsonify
 
-from sqlalchemy.exc import SQLAlchemyError
-
 from ..services.reservas import crear_reserva, cambiar_estado_reserva, obtener_reserva_por_id, obtener_reservas_services
 from ..validators.reservas import validar_body_crear_reserva, validar_body_cambiar_estado, validar_filtros_reservas, validar_estado, validar_rago_fechas
 from ..utils import validar_paginacion, respuesta_paginada
@@ -43,19 +41,6 @@ def get_reservas():
     total = contar_reservas (filtros)
 
     return respuesta_paginada("reservas", reservas,total,limit,offset) #aca devuelvo codigo 200 o 204
-    
-
-# @reservas_bp.route('/reservas', methods=['GET'])
-# def get_reservas():
-#     try:
-#         limit, offset = validar_paginacion(request.args)
-#         filtros = validar_filtros_reservas(request.args)
-#     except ValueError as error:
-#         status = error.args[1] if len(error.args) > 1 else 400
-#         return jsonify(error.args[0]), status
-#     reservas, total = obtener_reservas(filtros, limit, offset)
-#     return respuesta_paginada('reservas', reservas, total, limit, offset)
-
 
 @reservas_bp.route('/reservas', methods=['POST'])
 def post_reserva():

@@ -18,7 +18,7 @@ def asegurar_aware_datetime(fecha):
         fecha = datetime.fromisoformat(fecha)
     if fecha.tzinfo is None:
         fecha = fecha.replace(tzinfo=ZONA_GMT3)
-    return fecha
+    return fecha.astimezone(ZONA_GMT3)
 
 def _validar_fechas(fecha_inicio: datetime, fecha_fin: datetime):
     """Validaciones básicas de horario según el enunciado."""
@@ -156,7 +156,7 @@ def obtener_reserva_por_id(id_reserva: int):
 
 def obtener_reservas(filtros: dict, limit: int, offset: int):
     total = reservas_repo.contar_reservas(filtros)
-    reservas = reservas_repo.obtener_reservas(filtros, offset, limit)
+    reservas = reservas_repo.obtener_reservas(filtros, limit=limit, offset=offset)
     return reservas, total
 
 def obtener_reservas_services(filtros, limit, offset):
