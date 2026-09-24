@@ -1,6 +1,7 @@
 from datetime import date
 from re import fullmatch
 from club_deportivo_encuentro.utils import construir_error_api, validar_entero_estricto
+from club_deportivo_encuentro.constants import (DURACION_MAXIMA_HORAS, DURACION_MINIMA_HORAS, HORA_APERTURA, HORA_CIERRE, ZONA_GMT3,)
 
 
 def _validar_datos_cancha(data, parcial):
