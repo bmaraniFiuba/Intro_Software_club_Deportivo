@@ -41,3 +41,14 @@ def obtener_socio_por_id(id_socio):
             description=f'No existe un socio con id {id_socio}',
         ), 404)
     return socio
+
+
+def actualizar_socio(id_socio, data):
+    obtener_socio_por_id(id_socio)  # 404 si no existe
+    if 'email' in data and repository.existe_email(data['email'], id_socio):
+        raise ValueError(construir_error_api(
+            code=ERROR_CODE_SOCIO_EMAIL_DUPLICADO,
+            message='Email ya registrado',
+            description='El email indicado ya pertenece a otro socio',
+        ), 409)
+    repository.actualizar_socio(id_socio, data)
