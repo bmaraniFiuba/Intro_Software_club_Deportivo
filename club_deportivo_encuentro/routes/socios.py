@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
-from sqlalchemy.exc import SQLAlchemyError
 from club_deportivo_encuentro.services import socios as service
-from club_deportivo_encuentro.utils import construir_links, respuesta_paginada, validar_paginacion
+from club_deportivo_encuentro.utils import (respuesta_paginada,
+                                             validar_paginacion)
 from club_deportivo_encuentro.validators import socios as validator
 
 socios_bp = Blueprint('socios', __name__)
