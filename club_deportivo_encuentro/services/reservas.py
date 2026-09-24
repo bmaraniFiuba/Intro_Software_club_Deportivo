@@ -15,7 +15,7 @@ from club_deportivo_encuentro.repositories.reservas import (obtener_reservas, co
 
 def obtener_reservas_services (filtros, limit, offset):
     reservas = obtener_reservas(filtros, limit, offset)
-    cantidad = contar_reservas (filtros, limit, offset)
+    cantidad = contar_reservas (filtros)
 
     return reservas, cantidad
 

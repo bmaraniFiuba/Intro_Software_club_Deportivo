@@ -1,0 +1,6 @@
+$kind: http-request
+name: http://localhost:8080/club_deportivo_encuentro/reservas
+description: ""
+url: http://localhost:8080/club_deportivo_encuentro/reservas
+method: GET
+order: 1790217122795
