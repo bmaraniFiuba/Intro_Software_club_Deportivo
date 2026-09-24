@@ -1,5 +1,5 @@
 from datetime import datetime
-from re import fullmatch
+from re import sub
 import logging
 from urllib.parse import urlencode
 from flask import jsonify, request

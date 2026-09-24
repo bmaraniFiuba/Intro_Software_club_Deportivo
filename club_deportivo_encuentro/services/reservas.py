@@ -10,14 +10,7 @@ from ..constants import (
     ERROR_CODE_RESERVA_NOT_FOUND, ERROR_CODE_TRANSICION_INVALIDA,
 )
 from ..utils import construir_error_api
-from club_deportivo_encuentro.repositories.reservas import (obtener_reservas, contar_reservas)
 
-
-def obtener_reservas_services (filtros, limit, offset):
-    reservas = obtener_reservas(filtros, limit, offset)
-    cantidad = contar_reservas (filtros)
-
-    return reservas, cantidad
 
 def asegurar_aware_datetime(fecha):
     #Convierte a datetime aware en GMT-3, venga como string o como datetime naive
@@ -164,6 +157,10 @@ def obtener_reserva_por_id(id_reserva: int):
 def obtener_reservas(filtros: dict, limit: int, offset: int):
     total = reservas_repo.contar_reservas(filtros)
     reservas = reservas_repo.obtener_reservas(filtros, offset, limit)
+    return reservas, total
+
+def obtener_reservas_services(filtros, limit, offset):
+    reservas, total = obtener_reservas(filtros, limit, offset)
     return reservas, total
 
 

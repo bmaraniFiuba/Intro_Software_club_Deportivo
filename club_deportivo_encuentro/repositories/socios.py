@@ -1,4 +1,5 @@
-from club_deportivo_encuentro.db import ejecutar_consulta, ejecutar_escritura
+from club_deportivo_encuentro.db import (ejecutar_consulta,
+                                         ejecutar_escritura)
 from club_deportivo_encuentro.utils import cambiar_formato_booleano
 
 def obtener_socios(filtros):
