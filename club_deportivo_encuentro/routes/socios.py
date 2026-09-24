@@ -45,8 +45,9 @@ def get_socio_id(id_socio):
 
 @socios_bp.route('/socios/<int:id_socio>', methods=['PATCH'])
 def patch_socio(id_socio):
-    data = request.get_json(silent=True)
     try:
+        id_socio = validator.validar_id_socio(id_socio)
+        data = request.get_json(silent=True)
         data = validator.validar_body_actualizar_socio(data)
         service.actualizar_socio(id_socio, data)
     except ValueError as error:
