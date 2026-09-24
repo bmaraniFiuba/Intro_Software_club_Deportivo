@@ -1,7 +1,10 @@
 from flask import Blueprint, request, jsonify
+from sqlalchemy.exc import SQLAlchemyError
 from club_deportivo_encuentro.services import socios as service
-from club_deportivo_encuentro.utils import (respuesta_paginada,
+from club_deportivo_encuentro.utils import (construir_error_api,
+                                            respuesta_paginada,
                                              validar_paginacion)
+from club_deportivo_encuentro.constants import ERROR_CODE_INTERNAL
 from club_deportivo_encuentro.validators import socios as validator
 
 socios_bp = Blueprint('socios', __name__)
@@ -54,3 +57,11 @@ def patch_socio(id_socio):
         status = error.args[1] if len(error.args) > 1 else 400
         return jsonify(error.args[0]), status
     return '', 204
+
+@socios_bp.errorhandler(SQLAlchemyError)
+def manejar_error_db(error):
+    return jsonify(construir_error_api(
+        code=ERROR_CODE_INTERNAL,
+        message='Error interno del servidor',
+        description='No se pudo completar la operación.',
+    )), 500
