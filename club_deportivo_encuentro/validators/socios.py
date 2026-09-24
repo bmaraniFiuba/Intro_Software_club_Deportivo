@@ -25,8 +25,9 @@ def validar_nombre(nombre_socio):
     return validar_string_no_vacio(nombre_socio, 'nombre')
 
 def validar_email(email_socio):
-    if validar_string_no_vacio(email_socio, 'email'):
-        if not re.fullmatch(FORMATO_EMAIL, email_socio):
+    email = validar_string_no_vacio(email_socio, 'email').lower()
+    if email:
+        if not re.fullmatch(FORMATO_EMAIL, email):
             raise ValueError(construir_error_api(
                 code='invalid.email.format',
                 message="Formato de 'email' invalido",

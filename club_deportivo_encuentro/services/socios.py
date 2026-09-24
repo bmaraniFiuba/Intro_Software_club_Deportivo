@@ -27,7 +27,7 @@ def crear_socio(data):
     try:
         return repository.crear_socio(datos)
     except IntegrityError as error:
-        if getattr(error.orig, 'errno', None) == 1072:
+        if getattr(error.orig, 'errno', None) == 1062:
             raise ValueError(error_email, 409) from error
         raise
 
