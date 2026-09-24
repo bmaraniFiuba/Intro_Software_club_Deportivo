@@ -67,6 +67,7 @@ def obtener_por_id(id_socio):
     return cambiar_formato_booleano(filas[0]) if filas else None
 
 def actualizar_socio(id_socio, data):
+    """Actualiza datos de un socio existente en BD"""
     campos, params = [], {'id': id_socio}
     for campo in ('nombre', 'email', 'activo'):
         if campo in data:
