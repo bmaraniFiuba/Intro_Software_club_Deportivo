@@ -45,7 +45,7 @@ def obtener_reservas (filtros: dict, offset:int, limit:int) -> list[dict]:
     query_params["limit"] = limit
     query_params["offset"] = offset 
     
-    return [_formatear_reserva(fila) for fila in ejecutar_consulta(SQL, query_params)]
+    return ejecutar_consulta(SQL, query_params) # sqlalchemy agarra :id_socio y lo relaciona con ej "id_socio": 5
 
 def contar_reservas (filtros: dict) -> int:
     cond = [] 
@@ -69,11 +69,11 @@ def contar_reservas (filtros: dict) -> int:
         query_params["estado"] = filtros["estado"]
     
     if filtros.get('fecha_desde') is not None:
-        cond.append('DATE(fecha_hora_inicio) >= :fecha_desde')
+        cond.append('fecha_hora_inicio >= :fecha_desde')
         query_params['fecha_desde'] = filtros['fecha_desde']
         
     if filtros.get('fecha_hasta') is not None:
-        cond.append('DATE(fecha_hora_inicio) <= :fecha_hasta')
+        cond.append('fecha_hora_inicio <  :fecha_hasta')
         query_params['fecha_hasta'] = filtros['fecha_hasta']
         
     where = ""
@@ -83,7 +83,7 @@ def contar_reservas (filtros: dict) -> int:
             where += cond[condicion]
             if condicion < len(cond) - 1: ## si no es el ultimo elemento de la lista, etra a este if
                 where += ' AND '
-    sql = "SELECT COUNT(*) as total from reservas" + where 
+    sql = "SELECT COUNT(*) as total FROM reservas" + where 
     
     filas = ejecutar_consulta (sql, query_params) #es una lista con un solo diccionario de la forma [{"total": valor}]
     return filas [0] ['total']
@@ -91,7 +91,6 @@ def contar_reservas (filtros: dict) -> int:
     
 # funciones del metodo POST
 def existe_superposicion_cancha(id_cancha: int, inicio, fin) -> bool:
-    # Busca si la cancha ya tiene una reserva confirmada que se pise con el horario pedido.
     SQL = """
         SELECT 1 FROM reservas
         WHERE id_cancha = :id_cancha
@@ -108,7 +107,6 @@ def existe_superposicion_cancha(id_cancha: int, inicio, fin) -> bool:
     return len(resultado) > 0
 
 def existe_superposicion_socio(id_socio: int, inicio, fin) -> bool:
-    # se fija que el socio no tenga otra reserva confirmada en el mismo horario
     SQL = """
         SELECT 1 FROM reservas
         WHERE id_socio = :id_socio
@@ -131,45 +129,22 @@ def crear(datos: dict) -> dict:
         VALUES
             (:id_socio, :id_cancha, :fecha_hora_inicio, :fecha_hora_fin, :estado, :precio_hora, :precio_total)
     """
-    # Se le saca la zona horaria a las fechas porque la collumna en la DB la tiene como datatime sin zona horaria GMT-3
     nuevo_id = ejecutar_escritura(SQL, {
         **datos,
         "fecha_hora_inicio": datos["fecha_hora_inicio"].replace(tzinfo=None),
         "fecha_hora_fin": datos["fecha_hora_fin"].replace(tzinfo=None),
     })
 
-    return _formatear_reserva({
+    return {
         "id": nuevo_id,
         "id_socio": datos["id_socio"],
         "id_cancha": datos["id_cancha"],
-        "fecha_hora_inicio": datos["fecha_hora_inicio"],
-        "fecha_hora_fin": datos["fecha_hora_fin"],
+        "fecha_hora_inicio": _formatear_fecha(datos["fecha_hora_inicio"]),
+        "fecha_hora_fin": _formatear_fecha(datos["fecha_hora_fin"]),
         "estado": datos["estado"],
         "precio_hora": datos["precio_hora"],
         "precio_total": datos["precio_total"],
-    })
-
-
-#Funcion para el metodo GET por id
-def obtener_por_id(id_reserva: int) -> dict | None:
-    SQL = """
-        SELECT id, id_socio, id_cancha, estado,
-               fecha_hora_inicio, fecha_hora_fin, precio_hora, precio_total
-        FROM reservas
-        WHERE id = :id
-    """
-    filas = ejecutar_consulta(SQL, {"id": id_reserva})
-
-    if not filas:
-        return None  # el service lo usa para responder 404
-
-    return _formatear_reserva(filas[0])
-
-
-#Funciones para formatear los datos que vienen de la DB
-def _formatear_reserva(fila: dict) -> dict:
-    # Convierte un datetime al formato de fecha GMT-3
-    reserva = dict(fila)
-    reserva["fecha_hora_inicio"] = reserva["fecha_hora_inicio"].strftime(FORMATO_FECHA_HORA)
-    reserva["fecha_hora_fin"] = reserva["fecha_hora_fin"].strftime(FORMATO_FECHA_HORA)
-    return reserva
+    }
+    
+def _formatear_fecha(dt) -> str:
+    return dt.strftime(FORMATO_FECHA_HORA)

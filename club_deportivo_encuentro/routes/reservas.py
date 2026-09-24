@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+
 from sqlalchemy.exc import SQLAlchemyError
 
 from ..services.reservas import crear_reserva, cambiar_estado_reserva, obtener_reserva_por_id, obtener_reservas_services
@@ -79,6 +80,7 @@ def get_reserva_id(id_reserva):
 
     return jsonify(reserva), 200
 
+#////
 @reservas_bp.route('/reservas/<int:id_reserva>/estado', methods=['PUT'])
 def put_reserva_estado(id_reserva):
     body = request.get_json(silent=True)

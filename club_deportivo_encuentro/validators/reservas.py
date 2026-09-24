@@ -1,6 +1,6 @@
 from datetime import datetime
 from ..constants import (ZONA_GMT3, FORMATO_FECHA_HORA)
-from ..constants import ERROR_CODE_INVALID_BODY, ERROR_CODE_ESTADO_INVALIDO, FORMATO_FECHA, ESTADOS
+from ..constants import ERROR_CODE_INVALID_BODY, ERROR_CODE_ESTADO_INVALIDO, FORMATO_FECHA,  ESTADOS_VALIDOS
 from ..utils import construir_error_api, validar_formato_fecha, validar_entero_estricto
 
 
@@ -11,7 +11,7 @@ def validar_estado (estado):
     if estado is None:
         return None
     
-    if estado not in ESTADOS:
+    if estado not in ESTADOS_VALIDOS:
         raise ValueError(construir_error_api(
             code= ERROR_CODE_ESTADO_INVALIDO,
             message= 'Introduzca un estado valido',
