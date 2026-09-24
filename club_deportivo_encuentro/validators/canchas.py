@@ -62,6 +62,7 @@ def validar_disponibilidad(parametros):
     })
     errores = []
     fecha = parametros.get('fecha', '')
+    # Validación de formato de cadenas:
     if not fullmatch(r'[0-9]{4}-[0-9]{2}-[0-9]{2}', fecha):
         errores.append("'fecha' es obligatoria y debe tener formato YYYY-MM-DD.")
     else:
@@ -76,6 +77,22 @@ def validar_disponibilidad(parametros):
         filtros[campo] = valor
     if not errores and filtros['hora_inicio'] >= filtros['hora_fin']:
         errores.append('La hora de fin debe ser posterior a la hora de inicio.')
+
+    # Validación de reglas de negocio:
+    if not errores:
+        inicio = datetime.strptime(f"{fecha} {filtros['hora_inicio']}", '%Y-%m-%d %H:%M:%S').replace(tzinfo=ZONA_GMT3)
+        fin = datetime.strptime(f"{fecha} {filtros['hora_fin']}", '%Y-%m-%d %H:%M:%S').replace(tzinfo=ZONA_GMT3)
+
+        if inicio <= datetime.now(ZONA_GMT3):
+            errores.append('La fecha y hora de inicio deben ser futuras.')
+
+        if inicio.hour < HORA_APERTURA or fin.hour > HORA_CIERRE:
+            errores.append(f"El horario debe estar entre las {HORA_APERTURA:02d}:00 y las {HORA_CIERRE:02d}:00 hs.")
+
+        duracion = (fin - inicio).total_seconds() / 3600
+        if duracion < DURACION_MINIMA_HORAS or duracion > DURACION_MAXIMA_HORAS:
+            errores.append(f"La duración debe ser entre {DURACION_MINIMA_HORAS} y {DURACION_MAXIMA_HORAS} horas.")
+
     if errores:
         raise ValueError(construir_error_api('invalid.parameters', 'Parámetros inválidos', ' '.join(errores)))
     filtros['fecha'] = fecha
