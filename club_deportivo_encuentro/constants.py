@@ -22,7 +22,7 @@ DB_PASSWORD = os.getenv('DB_PASSWORD', 'root')
 DB_NAME     = os.getenv('DB_NAME', 'Club_Deportivo')
 DB_URL      = f'mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
 
-# Codigos de error
+# Códigos de error estandarizados
 ERROR_CODE_INVALID_BODY        = 'invalid.body'
 ERROR_CODE_INVALID_MIN_VALUE   = 'invalid.min.value'
 ERROR_CODE_INVALID_MAX_VALUE   = 'invalid.max.value'
@@ -35,7 +35,7 @@ ERROR_CODE_TRANSICION_INVALIDA = 'reserva.estado.transition.not.allowed'
 ERROR_CODE_PARAMETRO_DESCONOCIDO = 'invalid.parameter.unknown'
 ERROR_CODE_INTERNAL            = 'internal.error'
 
-#RESERVAS
+# RESERVAS
 ESTADO_CONFIRMADA = "confirmada"
 ESTADO_CANCELADA = "cancelada"
 ESTADO_FINALIZADA = "finalizada"
