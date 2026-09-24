@@ -47,6 +47,19 @@ def obtener_reservas (filtros: dict, offset:int, limit:int) -> list[dict]:
     
     return ejecutar_consulta(SQL, query_params) # sqlalchemy agarra :id_socio y lo relaciona con ej "id_socio": 5
 
+def obtener_por_id(id_reserva: int) -> dict | None:
+    SQL = "SELECT * FROM reservas WHERE id = :id_reserva"
+    resultado = ejecutar_consulta(SQL, {"id_reserva": id_reserva})
+    if not resultado:
+        return None
+    return resultado[0]
+
+
+def actualizar_estado(id_reserva: int, nuevo_estado: str) -> None:
+    SQL = "UPDATE reservas SET estado = :estado WHERE id = :id_reserva"
+    ejecutar_escritura(SQL, {"estado": nuevo_estado, "id_reserva": id_reserva})
+
+
 def contar_reservas (filtros: dict) -> int:
     cond = [] 
     query_params = {}
