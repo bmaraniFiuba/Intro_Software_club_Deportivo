@@ -124,39 +124,6 @@ CAMPOS_FILTRO_RESERVAS = {
 }
 
 
-def validar_filtros_reservas(parametros):
-    desconocidos = set(parametros.keys()) - CAMPOS_FILTRO_RESERVAS
-    if desconocidos:
-        raise ValueError(construir_error_api(
-            code='invalid.parameters',
-            message='Parámetros no reconocidos',
-            description=f"Parámetros no reconocidos: {', '.join(sorted(desconocidos))}",
-        ), 400)
-
-    filtros = {}
-
-    if 'id_cancha' in parametros:
-        filtros['id_cancha'] = validar_entero_estricto(parametros['id_cancha'], 'id_cancha')
-
-    if 'id_socio' in parametros:
-        filtros['id_socio'] = validar_entero_estricto(parametros['id_socio'], 'id_socio')
-
-    if 'estado' in parametros:
-        estado = parametros['estado']
-        validar_estado(estado)
-        filtros['estado'] = estado
-
-    fecha_desde, fecha_hasta = validar_rago_fechas(
-        parametros.get('fecha_desde'), parametros.get('fecha_hasta')
-    )
-    if fecha_desde is not None:
-        filtros['fecha_desde'] = fecha_desde
-    if fecha_hasta is not None:
-        filtros['fecha_hasta'] = fecha_hasta
-
-    return filtros
-
-
 #AGREGO(se puede reacomodar)
 
 def validar_body_cambiar_estado(body):
