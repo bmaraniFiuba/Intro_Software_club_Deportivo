@@ -1,13 +1,13 @@
 ## Integrantes
--Gaston Roberti
--Leandro Piccicacco
--Lucía Hernández Tamagno
+-Gaston Roberti 116174
+-Leandro Piccicacco 116059
+-Lucía Hernández Tamagno 116281
 -Tiago Elias Melilli
--Alexis Martin Blazek
--Agustín Perata
--Cristian Nahuel Daglio
--Juan Francisco Skanata
--Baltazar Marani
+-Alexis Martin Blazek 115977
+-Agustín Perata 115580
+-Cristian Nahuel Daglio 116017
+-Juan Francisco Skanata 116128
+-Baltazar Marani 115983
 
 ## Requisitos previos
 
