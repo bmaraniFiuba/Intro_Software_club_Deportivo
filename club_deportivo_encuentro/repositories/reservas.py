@@ -107,8 +107,8 @@ def existe_superposicion_cancha(id_cancha: int, inicio, fin) -> bool:
     """
     resultado = ejecutar_consulta(SQL, {
         "id_cancha": id_cancha,
-        "inicio": inicio,
-        "fin": fin,
+        "inicio": inicio.replace(tzinfo=None),
+        "fin": fin.replace(tzinfo=None),
     })
     return len(resultado) > 0
 
@@ -124,8 +124,8 @@ def existe_superposicion_socio(id_socio: int, inicio, fin) -> bool:
     """
     resultado = ejecutar_consulta(SQL, {
         "id_socio": id_socio,
-        "inicio": inicio,
-        "fin": fin,
+        "inicio": inicio.replace(tzinfo=None),
+        "fin": fin.replace(tzinfo=None),
     })
     return len(resultado) > 0
 
