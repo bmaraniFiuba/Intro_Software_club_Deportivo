@@ -1,9 +1,10 @@
 from flask import Blueprint, request, jsonify
 
 from ..services.reservas import crear_reserva, cambiar_estado_reserva, obtener_reserva_por_id, obtener_reservas_services
-from ..validators.reservas import validar_body_crear_reserva, validar_body_cambiar_estado, validar_filtros_reservas, validar_estado, validar_rago_fechas
-from ..utils import validar_paginacion, respuesta_paginada
+from ..validators.reservas import validar_body_crear_reserva, validar_body_cambiar_estado, validar_filtros_reservas, validar_estado, validar_rago_fechas,validar_ids_reserva
+from ..utils import validar_paginacion, respuesta_paginada, validar_entero_estricto
 from ..repositories.reservas import obtener_reservas, contar_reservas
+from ..validators.socios import validar_id_socio
 
 
 
@@ -25,12 +26,14 @@ def get_reservas():
         estado = validar_estado(request.args.get('estado'))
         limit, offset = validar_paginacion(request.args)
         fecha_desde, fecha_hasta = validar_rago_fechas (request.args.get('fecha_desde'), request.args.get('fecha_hasta'))
+        id_socio = validar_ids_reserva(request.args.get('id_socio'), 'id_socio')
+        id_cancha = validar_ids_reserva(request.args.get("id_cancha"), "id_cancha")
     except ValueError as e:
         return jsonify(e.args[0]), 400
     
     filtros = {
-        'id_cancha': request.args.get("id_cancha"),
-        "id_socio" : request.args.get("id_socio"),
+        'id_cancha': id_cancha,
+        "id_socio" : id_socio,
         "estado" : estado,
         "fecha_desde": fecha_desde,
         "fecha_hasta" : fecha_hasta

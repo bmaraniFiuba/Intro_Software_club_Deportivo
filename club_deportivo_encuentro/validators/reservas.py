@@ -3,7 +3,19 @@ from ..constants import (ZONA_GMT3, FORMATO_FECHA_HORA)
 from ..constants import ERROR_CODE_INVALID_BODY, ERROR_CODE_ESTADO_INVALIDO, FORMATO_FECHA,  ESTADOS
 from ..utils import construir_error_api, validar_formato_fecha, validar_entero_estricto
 
-
+def validar_ids_reserva (valor, nombre:str):
+    if valor is None:
+        return None
+    
+    validacion_id = validar_entero_estricto(valor, nombre)
+    if validacion_id > 0:
+        return validacion_id
+    else:
+        raise ValueError (construir_error_api(
+            code=f"invalid.{nombre.lstrip('_')}.format",
+            message=f"Formato de '{nombre}' invalido",
+            description=f"El valor '{valor}' debe ser un entero positivo"
+        ))
 
 
 def validar_estado (estado):
