@@ -3,7 +3,8 @@ CREATE DATABASE Club_Deportivo CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 USE Club_Deportivo;
 
-SET NAMES utf8mb4;
+SET NAMES utf8mb4; -- para que los acentos se guarden correctamente en la base de datos 
+
 
 -- =========================
 -- TABLA DEPORTES
