@@ -9,11 +9,6 @@
 -Juan Francisco Skanata
 -Baltazar Marani
 
-
-
-
-
-
 ## Requisitos previos
 
 * Tener instalado Docker y Docker Compose en el equipo.
@@ -44,11 +39,6 @@ SHOW TABLES;
 
 #para ver el contenido de una tabla especifica:
 SELECT * FROM <nombre de tabla>;
-
-
-
-
-
 
 
 ---
