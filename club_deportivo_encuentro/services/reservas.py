@@ -20,10 +20,11 @@ def asegurar_aware_datetime(fecha):
         fecha = fecha.replace(tzinfo=ZONA_GMT3)
     return fecha.astimezone(ZONA_GMT3)
 
-def _validar_fechas(fecha_inicio: datetime, fecha_fin: datetime):
+def validar_fechas(fecha_inicio: datetime, fecha_fin: datetime):
     """Validaciones básicas de horario según el enunciado."""
     ahora = datetime.now(ZONA_GMT3)
 
+    # 1. Fecha futura estricta
     if fecha_inicio <= ahora:
         raise ValueError(construir_error_api(
             code='fecha.pasada',
@@ -31,6 +32,7 @@ def _validar_fechas(fecha_inicio: datetime, fecha_fin: datetime):
             description='La reserva debe ser para una fecha/hora futura',
         ), 400)
 
+    # 2. Orden cronológico
     if fecha_inicio >= fecha_fin:
         raise ValueError(construir_error_api(
             code='intervalo.invalido',
@@ -38,6 +40,15 @@ def _validar_fechas(fecha_inicio: datetime, fecha_fin: datetime):
             description='La hora de inicio debe ser anterior a la de fin',
         ), 400)
 
+    # 3. Mismo día calendario (no cruzar medianoche)
+    if fecha_inicio.date() != fecha_fin.date():
+        raise ValueError(construir_error_api(
+            code='cruza.medianoche',
+            message='Intervalo inválido',
+            description='La reserva no puede cruzar la medianoche',
+        ), 400)
+    
+    # 4. Horas en punto
     if (fecha_inicio.minute, fecha_inicio.second, fecha_inicio.microsecond) != (0, 0, 0):
         raise ValueError(construir_error_api(
             code='horario.invalido',
@@ -52,6 +63,7 @@ def _validar_fechas(fecha_inicio: datetime, fecha_fin: datetime):
             description='La hora de fin debe ser en punto',
         ), 400)
 
+    # 5. Duración entre 1 y 3 horas completas
     duracion = (fecha_fin - fecha_inicio).total_seconds() / 3600
     if duracion < DURACION_MINIMA_HORAS or duracion > DURACION_MAXIMA_HORAS:
         raise ValueError(construir_error_api(
@@ -59,14 +71,8 @@ def _validar_fechas(fecha_inicio: datetime, fecha_fin: datetime):
             message='Duración inválida',
             description=f"La reserva debe durar entre {DURACION_MINIMA_HORAS} y {DURACION_MAXIMA_HORAS} horas",
         ), 400)
-
-    if fecha_inicio.date() != fecha_fin.date():
-        raise ValueError(construir_error_api(
-            code='cruza.medianoche',
-            message='Intervalo inválido',
-            description='La reserva no puede cruzar la medianoche',
-        ), 400)
-
+        
+    # 6. Rango de atención del club 08:00 a 23:00
     if fecha_inicio.hour < HORA_APERTURA or fecha_fin.hour > HORA_CIERRE:
         raise ValueError(construir_error_api(
             code='fuera.de.horario',
@@ -80,7 +86,7 @@ def crear_reserva(id_socio: int, id_cancha: int, fecha_hora_inicio: str, fecha_h
     fecha_hora_fin = asegurar_aware_datetime(fecha_hora_fin)
     
     # 1. Validar reglas de horario
-    _validar_fechas(fecha_hora_inicio, fecha_hora_fin)
+    validar_fechas(fecha_hora_inicio, fecha_hora_fin)
 
     # 2. Validar Socio
     socio = socios_repo.obtener_por_id(id_socio)

@@ -33,7 +33,7 @@ def validar_estado (estado):
         
     return estado
 
-def validar_rago_fechas (fecha_desde: str, fecha_hasta:str):
+def validar_rango_fechas (fecha_desde: str, fecha_hasta:str):
     fecha_desde_validada = None
     fecha_hasta_validada = None
     
