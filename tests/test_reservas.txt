@@ -291,3 +291,34 @@ Esperado: 400 — el contrato exige exactamente YYYY-MM-DDTHH:MM:SS.ffffff-03:00
   "estado": "finalizada",
   "precio_total": 1
 }
+
+-- PUT RESERVAS
+Caso 1 - correcto
+URL:
+http://localhost:8080/reservas/{1}/estado
+BODY:
+{
+  "estado": "cancelada"
+}
+
+Esperado: 201
+
+Caso 2: conflicto al cambiar el estado (solo si se cambia a cancelado primero)
+URL:
+http://localhost:8080/reservas/{1}/estado
+BODY:
+{
+  "estado": "confirmada"
+}
+
+Esperado: 409
+
+Caso 3: estado inexistente
+URL:
+http://localhost:8080/reservas/{1}/estado
+BODY:
+{
+  "estado": "pendiente"
+}
+
+Esperado: 400
