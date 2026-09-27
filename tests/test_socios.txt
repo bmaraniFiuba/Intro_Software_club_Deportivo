@@ -1,0 +1,177 @@
+-----> SOCIOS <----------
+
+-- GET SOCIOS
+URLs para testear socios:
+
+http://localhost:8080/club_deportivo_encuentro/socios?_limit=1
+http://localhost:8080/club_deportivo_encuentro/socios?_limit=100
+http://localhost:8080/club_deportivo_encuentro/socios?_limit=0
+http://localhost:8080/club_deportivo_encuentro/socios?_limit=101
+http://localhost:8080/club_deportivo_encuentro/socios?_offset=0
+http://localhost:8080/club_deportivo_encuentro/socios?_offset=-1
+http://localhost:8080/club_deportivo_encuentro/socios?_offset=9999
+
+NOMBRE (parcial, sin distinguir mayúsculas/minúsculas)
+http://localhost:8080/club_deportivo_encuentro/socios?nombre=marani
+http://localhost:8080/club_deportivo_encuentro/socios?nombre=MARANI
+http://localhost:8080/club_deportivo_encuentro/socios?nombre=zzz_no_existe
+
+ACTIVO
+http://localhost:8080/club_deportivo_encuentro/socios?activo=true
+http://localhost:8080/club_deportivo_encuentro/socios?activo=false
+http://localhost:8080/club_deportivo_encuentro/socios?activo=si
+
+PARAMETRO DESCONOCIDO
+http://localhost:8080/club_deportivo_encuentro/socios?telefono=123
+
+COMBINACION
+http://localhost:8080/club_deportivo_encuentro/socios?nombre=a&activo=true&_limit=5&_offset=0
+
+
+-- POST SOCIOS
+Caso 1 — Creación válida
+{
+  "nombre": "Perez, Juan",
+  "email": "jperez@fi.uba.ar"
+}
+Esperado: 201. activo: true (lo asigna el servidor).
+
+Caso 2 — Email duplicado (bmarani@fi.uba.ar ya existe, socio id 1)
+{
+  "nombre": "Otro Marani",
+  "email": "bmarani@fi.uba.ar"
+}
+Esperado: 409.
+
+Caso 3 — Email duplicado con mayúsculas/espacios (mismo caso 2, pero disfrazado)
+{
+  "nombre": "Otro Marani",
+  "email": "  BMarani@FI.UBA.AR  "
+}
+Esperado: 409 — el email se normaliza a minúsculas/sin espacios antes de comparar.
+
+Caso 4 — Nombre vacío
+{
+  "nombre": "   ",
+  "email": "nuevo@fi.uba.ar"
+}
+Esperado: 400.
+
+Caso 5 — Email con formato inválido
+{
+  "nombre": "Test Formato",
+  "email": "no-es-un-email"
+}
+Esperado: 400.
+
+Caso 6 — Falta un campo obligatorio
+{
+  "nombre": "Falta Email"
+}
+Esperado: 400.
+
+Caso 7 — Body vacío
+{}
+Esperado: 400.
+
+Caso 8 — Campo desconocido
+{
+  "nombre": "Con Telefono",
+  "email": "contelefono@fi.uba.ar",
+  "telefono": "1122334455"
+}
+Esperado: 400.
+
+Caso 9 — Intenta pisar "activo" en la creación
+{
+  "nombre": "Quiere Ser Inactivo",
+  "email": "inactivo@fi.uba.ar",
+  "activo": false
+}
+Esperado: 400 — "activo" no es un campo permitido en la creación (lo asigna el servidor en true).
+
+
+-- GET SOCIOS/{ID}
+Caso 1 — Id existente
+URL: http://localhost:8080/club_deportivo_encuentro/socios/1
+Esperado: 200.
+
+Caso 2 — Id inexistente
+URL: http://localhost:8080/club_deportivo_encuentro/socios/9999
+Esperado: 404.
+
+Caso 3 — Id no numérico
+URL: http://localhost:8080/club_deportivo_encuentro/socios/hola
+Esperado: 404 (no matchea la ruta <int:id_socio>, es el 404 genérico de Flask, no el de "socio no encontrado").
+
+
+-- PATCH SOCIOS/{ID}
+Caso 1 — Actualización válida de nombre
+URL: http://localhost:8080/club_deportivo_encuentro/socios/2
+BODY:
+{
+  "nombre": "Daglio, Cristian Ariel"
+}
+Esperado: 204.
+
+Caso 2 — Desactivar un socio
+URL: http://localhost:8080/club_deportivo_encuentro/socios/3
+BODY:
+{
+  "activo": false
+}
+Esperado: 204.
+
+Caso 3 — Email ya usado por OTRO socio
+URL: http://localhost:8080/club_deportivo_encuentro/socios/2
+BODY:
+{
+  "email": "bmarani@fi.uba.ar"
+}
+Esperado: 409 — ese email ya es del socio id 1.
+
+Caso 4 — Email igual al que ya tiene el propio socio (no debería dar conflicto)
+URL: http://localhost:8080/club_deportivo_encuentro/socios/1
+BODY:
+{
+  "email": "bmarani@fi.uba.ar"
+}
+Esperado: 204 — es su propio email, no colisiona consigo mismo.
+
+Caso 5 — Body vacío
+URL: http://localhost:8080/club_deportivo_encuentro/socios/1
+BODY:
+{}
+Esperado: 400.
+
+Caso 6 — Campo desconocido
+URL: http://localhost:8080/club_deportivo_encuentro/socios/1
+BODY:
+{
+  "id": 55
+}
+Esperado: 400.
+
+Caso 7 — Id inexistente
+URL: http://localhost:8080/club_deportivo_encuentro/socios/9999
+BODY:
+{
+  "nombre": "No Existe"
+}
+Esperado: 404.
+
+Caso 8 — Tipo incorrecto en "activo"
+URL: http://localhost:8080/club_deportivo_encuentro/socios/1
+BODY:
+{
+  "activo": "true"
+}
+Esperado: 400 — tiene que ser booleano de JSON (true), no el string "true".
+
+Caso 9 — Id inválido (cero)
+URL: http://localhost:8080/club_deportivo_encuentro/socios/0
+BODY:
+{
+  "nombre": "Test"
+}
+Esperado: 400.
