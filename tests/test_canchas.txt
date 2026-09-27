@@ -1,0 +1,292 @@
+-----> CANCHAS <----------
+
+-- GET CANCHAS
+URLs para testear canchas:
+
+http://localhost:8080/club_deportivo_encuentro/canchas
+http://localhost:8080/club_deportivo_encuentro/canchas?_limit=1
+http://localhost:8080/club_deportivo_encuentro/canchas?_limit=100
+http://localhost:8080/club_deportivo_encuentro/canchas?_limit=0
+http://localhost:8080/club_deportivo_encuentro/canchas?_limit=101
+http://localhost:8080/club_deportivo_encuentro/canchas?_limit=abc
+http://localhost:8080/club_deportivo_encuentro/canchas?_offset=0
+http://localhost:8080/club_deportivo_encuentro/canchas?_offset=-1
+http://localhost:8080/club_deportivo_encuentro/canchas?_offset=9999
+
+Esperado: 200 en listado normal, límites 1/100 y offsets válidos. 400 para
+_limit=0, _limit=101, _limit=abc y _offset=-1. Offset grande puede devolver 200
+con una lista vacía.
+
+DEPORTE
+http://localhost:8080/club_deportivo_encuentro/canchas?id_deporte=1
+http://localhost:8080/club_deportivo_encuentro/canchas?id_deporte=2
+http://localhost:8080/club_deportivo_encuentro/canchas?id_deporte=abc
+
+Esperado: 200 para IDs enteros; 400 para texto.
+
+TECHADA
+http://localhost:8080/club_deportivo_encuentro/canchas?techada=true
+http://localhost:8080/club_deportivo_encuentro/canchas?techada=false
+http://localhost:8080/club_deportivo_encuentro/canchas?techada=si
+
+Esperado: 200 para true/false; 400 para `si`.
+
+ACTIVA
+http://localhost:8080/club_deportivo_encuentro/canchas?activa=true
+http://localhost:8080/club_deportivo_encuentro/canchas?activa=false
+http://localhost:8080/club_deportivo_encuentro/canchas?activa=1
+
+Esperado: 200 para true/false; 400 para `1`.
+
+NOMBRE Y COMBINACION
+http://localhost:8080/club_deportivo_encuentro/canchas?nombre=f%C3%9ATBOL
+http://localhost:8080/club_deportivo_encuentro/canchas?nombre=NoExiste
+http://localhost:8080/club_deportivo_encuentro/canchas?id_deporte=1&techada=true&activa=true&_limit=5&_offset=0
+
+Esperado: 200 para búsqueda parcial sin distinguir mayúsculas y combinación;
+204 para nombre válido sin coincidencias.
+
+-- POST CANCHAS
+
+Caso 1 — Cancha válida
+URL:
+http://localhost:8080/club_deportivo_encuentro/canchas
+BODY:
+{
+  "nombre": "Cancha Fútbol 5",
+  "id_deporte": 1,
+  "precio_hora": 900000,
+  "techada": true,
+  "activa": true
+}
+Esperado: 201.
+
+Caso 2 — Solo campos obligatorios
+URL:
+http://localhost:8080/club_deportivo_encuentro/canchas
+BODY:
+{
+  "nombre": "Cancha Tenis Nueva",
+  "id_deporte": 2,
+  "precio_hora": 500000
+}
+Esperado: 201; techada false y activa true por defecto.
+
+Caso 3 — Falta nombre
+URL:
+http://localhost:8080/club_deportivo_encuentro/canchas
+BODY:
+{"id_deporte":1,"precio_hora":800000}
+Esperado: 400.
+
+Caso 4 — Falta deporte
+URL:
+http://localhost:8080/club_deportivo_encuentro/canchas
+BODY:
+{"nombre":"Cancha sin deporte","precio_hora":800000}
+Esperado: 400.
+
+Caso 5 — Falta precio
+URL:
+http://localhost:8080/club_deportivo_encuentro/canchas
+BODY:
+{"nombre":"Cancha sin precio","id_deporte":1}
+Esperado: 400.
+
+Caso 6 — Body vacío
+URL:
+http://localhost:8080/club_deportivo_encuentro/canchas
+BODY:
+{}
+Esperado: 400.
+
+Caso 7 — JSON inválido o body que no es objeto
+URL:
+http://localhost:8080/club_deportivo_encuentro/canchas
+BODY:
+["Cancha Fútbol 5",1,800000]
+Esperado: 400. Repetir con RAW `{nombre: sin-comillas}`: 400.
+
+Caso 8 — Precio inválido
+URL:
+http://localhost:8080/club_deportivo_encuentro/canchas
+BODY (probar cada uno):
+{"nombre":"Precio cero","id_deporte":1,"precio_hora":0}
+{"nombre":"Precio negativo","id_deporte":1,"precio_hora":-100}
+{"nombre":"Precio texto","id_deporte":1,"precio_hora":"800000"}
+Esperado: 400 en todos.
+
+Caso 9 — Deporte inválido o inexistente
+URL:
+http://localhost:8080/club_deportivo_encuentro/canchas
+BODY (probar cada uno):
+{"nombre":"Deporte texto","id_deporte":"1","precio_hora":800000}
+{"nombre":"Deporte inexistente","id_deporte":999,"precio_hora":800000}
+Esperado: 400 para texto; 404 para deporte inexistente.
+
+Caso 10 — Booleanos válidos
+URL:
+http://localhost:8080/club_deportivo_encuentro/canchas
+BODY:
+{"nombre":"Cancha inactiva","id_deporte":3,"precio_hora":700000,"techada":false,"activa":false}
+Esperado: 201.
+
+Caso 11 — Booleanos con tipo incorrecto
+URL:
+http://localhost:8080/club_deportivo_encuentro/canchas
+BODY (probar cada uno):
+{"nombre":"Techada texto","id_deporte":1,"precio_hora":800000,"techada":"true"}
+{"nombre":"Activa texto","id_deporte":1,"precio_hora":800000,"activa":"false"}
+Esperado: 400 en ambos.
+
+Caso 12 — Nombre mayor a 30 caracteres
+URL:
+http://localhost:8080/club_deportivo_encuentro/canchas
+BODY:
+{"nombre":"Cancha con nombre de mas de treinta caracteres","id_deporte":1,"precio_hora":800000}
+Esperado según Swagger: 201, porque nombre no define maxLength.
+
+-- GET CANCHA POR ID
+
+Caso 1 — Cancha existente
+http://localhost:8080/club_deportivo_encuentro/canchas/1
+Esperado: 200.
+
+Caso 2 — Cancha inexistente
+http://localhost:8080/club_deportivo_encuentro/canchas/999
+Esperado: 404.
+
+Caso 3 — ID inválido
+http://localhost:8080/club_deportivo_encuentro/canchas/hola
+Esperado: 404.
+
+-- PATCH CANCHAS
+
+Caso 1 — Cambiar nombre
+URL:
+http://localhost:8080/club_deportivo_encuentro/canchas/1
+BODY:
+{"nombre":"Cancha Fútbol 1 Renovada"}
+Esperado: 204.
+
+Caso 2 — Cambiar precio
+URL:
+http://localhost:8080/club_deportivo_encuentro/canchas/1
+BODY:
+{"precio_hora":850000}
+Esperado: 204.
+
+Caso 3 — Cambiar techada y activa
+URL:
+http://localhost:8080/club_deportivo_encuentro/canchas/3
+BODY:
+{"techada":true,"activa":false}
+Esperado: 204.
+
+Caso 4 — Varios campos
+URL:
+http://localhost:8080/club_deportivo_encuentro/canchas/5
+BODY:
+{"nombre":"Cancha Pádel Renovada","precio_hora":750000,"techada":false,"activa":true}
+Esperado: 204.
+
+Caso 5 — Precio inválido
+URL:
+http://localhost:8080/club_deportivo_encuentro/canchas/1
+BODY (probar cada uno):
+{"precio_hora":0}
+{"precio_hora":"850000"}
+Esperado: 400 en ambos.
+
+Caso 6 — Booleano inválido e intento de cambiar deporte
+URL:
+http://localhost:8080/club_deportivo_encuentro/canchas/1
+BODY (probar cada uno):
+{"activa":"true"}
+{"id_deporte":2}
+Esperado: 400; id_deporte no forma parte de CanchaUpdate.
+
+Caso 7 — Cancha inexistente
+URL:
+http://localhost:8080/club_deportivo_encuentro/canchas/999
+BODY:
+{"precio_hora":850000}
+Esperado: 404.
+
+-- DELETE CANCHAS
+
+Caso 1 — Cancha sin reservas
+Crear con POST una cancha llamada "Cancha para borrar", anotar el id devuelto y usarlo en esta URL.
+URL:
+http://localhost:8080/club_deportivo_encuentro/canchas/{id_devuelto}
+Esperado: 204.
+
+Caso 2 — Comprobar eliminación
+URL:
+http://localhost:8080/club_deportivo_encuentro/canchas/{id_devuelto}
+Esperado: 404.
+
+Caso 3 — Cancha con reservas
+URL:
+http://localhost:8080/club_deportivo_encuentro/canchas/1
+Esperado: 409 `cancha.has.reservas`.
+
+-- GET CANCHAS DISPONIBLES
+
+Caso 1 — Consulta válida
+http://localhost:8080/club_deportivo_encuentro/canchas/disponibles?fecha=2026-10-16&hora_inicio=10:00:00&hora_fin=11:00:00
+Esperado: 200.
+
+Caso 2 — Filtros y combinación
+http://localhost:8080/club_deportivo_encuentro/canchas/disponibles?fecha=2026-10-16&hora_inicio=10:00:00&hora_fin=11:00:00&id_deporte=1
+http://localhost:8080/club_deportivo_encuentro/canchas/disponibles?fecha=2026-10-16&hora_inicio=10:00:00&hora_fin=11:00:00&techada=true
+http://localhost:8080/club_deportivo_encuentro/canchas/disponibles?fecha=2026-10-16&hora_inicio=10:00:00&hora_fin=11:00:00&id_deporte=1&techada=true
+Esperado: 200 en todos, respetando filtros.
+
+Caso 3 — Paginación
+http://localhost:8080/club_deportivo_encuentro/canchas/disponibles?fecha=2026-10-16&hora_inicio=10:00:00&hora_fin=11:00:00&_limit=1&_offset=0
+Esperado: 200.
+
+Caso 4 — Falta fecha, inicio o fin
+http://localhost:8080/club_deportivo_encuentro/canchas/disponibles?hora_inicio=10:00:00&hora_fin=11:00:00
+http://localhost:8080/club_deportivo_encuentro/canchas/disponibles?fecha=2026-10-16&hora_fin=11:00:00
+http://localhost:8080/club_deportivo_encuentro/canchas/disponibles?fecha=2026-10-16&hora_inicio=10:00:00
+Esperado: 400 en los tres.
+
+Caso 5 — Fecha incorrecta, imposible o pasada
+http://localhost:8080/club_deportivo_encuentro/canchas/disponibles?fecha=16-10-2026&hora_inicio=10:00:00&hora_fin=11:00:00
+http://localhost:8080/club_deportivo_encuentro/canchas/disponibles?fecha=2026-02-30&hora_inicio=10:00:00&hora_fin=11:00:00
+http://localhost:8080/club_deportivo_encuentro/canchas/disponibles?fecha=2026-09-10&hora_inicio=10:00:00&hora_fin=11:00:00
+Esperado: 400 en todos.
+
+Caso 6 — Hora inválida, inicio igual y fin anterior
+http://localhost:8080/club_deportivo_encuentro/canchas/disponibles?fecha=2026-10-16&hora_inicio=10:30:00&hora_fin=11:00:00
+http://localhost:8080/club_deportivo_encuentro/canchas/disponibles?fecha=2026-10-17&hora_inicio=10:00:00&hora_fin=10:00:00
+http://localhost:8080/club_deportivo_encuentro/canchas/disponibles?fecha=2026-10-17&hora_inicio=12:00:00&hora_fin=10:00:00
+Esperado: 400 en todos.
+
+Caso 7 — Apertura y cierre
+http://localhost:8080/club_deportivo_encuentro/canchas/disponibles?fecha=2026-10-17&hora_inicio=07:00:00&hora_fin=09:00:00
+http://localhost:8080/club_deportivo_encuentro/canchas/disponibles?fecha=2026-10-18&hora_inicio=08:00:00&hora_fin=09:00:00
+http://localhost:8080/club_deportivo_encuentro/canchas/disponibles?fecha=2026-10-18&hora_inicio=22:00:00&hora_fin=23:00:00
+Esperado: 400 antes de apertura; 200 en ambos bordes si hay canchas disponibles.
+
+Caso 8 — Duración máxima y superior
+http://localhost:8080/club_deportivo_encuentro/canchas/disponibles?fecha=2026-10-19&hora_inicio=08:00:00&hora_fin=11:00:00
+http://localhost:8080/club_deportivo_encuentro/canchas/disponibles?fecha=2026-10-19&hora_inicio=08:00:00&hora_fin=12:00:00
+Esperado: 200 para tres horas; 400 para cuatro horas.
+
+Caso 9 — Cancha ocupada y solapamiento
+Usar después de crear la reserva de cancha 3 del 2026-10-15 de 18:00 a 20:00.
+http://localhost:8080/club_deportivo_encuentro/canchas/disponibles?fecha=2026-10-15&hora_inicio=18:00:00&hora_fin=19:00:00&id_deporte=2
+http://localhost:8080/club_deportivo_encuentro/canchas/disponibles?fecha=2026-10-15&hora_inicio=19:00:00&hora_fin=21:00:00&id_deporte=2
+Esperado: 204 en ambos.
+
+Caso 10 — Intervalo consecutivo
+Usar después de crear la reserva de cancha 3 del 2026-10-15 de 18:00 a 20:00.
+http://localhost:8080/club_deportivo_encuentro/canchas/disponibles?fecha=2026-10-15&hora_inicio=20:00:00&hora_fin=21:00:00&id_deporte=2
+Esperado: 200 e incluye cancha 3; no hay solapamiento.
+
+Caso 11 — Sin resultados
+http://localhost:8080/club_deportivo_encuentro/canchas/disponibles?fecha=2026-10-16&hora_inicio=10:00:00&hora_fin=11:00:00&id_deporte=3&techada=false
+Esperado: 204.

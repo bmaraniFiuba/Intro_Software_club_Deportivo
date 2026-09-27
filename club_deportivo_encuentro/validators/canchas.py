@@ -5,7 +5,7 @@ from club_deportivo_encuentro.constants import (DURACION_MAXIMA_HORAS, DURACION_
 
 
 def _validar_datos_cancha(data, parcial):
-    if not isinstance(data, dict):
+    if not isinstance(data, dict) or not data:
         raise ValueError(construir_error_api('invalid.body', 'JSON inválido', 'El cuerpo debe ser un objeto JSON.'))
     errores = []
     
