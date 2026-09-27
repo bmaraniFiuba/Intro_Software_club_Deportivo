@@ -3,24 +3,24 @@
 -- GET RESERVAS
 URLs para testear reservas:
 
-http://localhost:8080/reservas?_limit=1
-http://localhost:8080/reservas?_limit=100
-http://localhost:8080/reservas?_limit=0
-http://localhost:8080/reservas?_limit=101
-http://localhost:8080/reservas?_offset=0
-http://localhost:8080/reservas?_offset=-1
-http://localhost:8080/reservas?_offset=9999
+http://localhost:8080/club_deportivo_encuentro/reservas?_limit=1
+http://localhost:8080/club_deportivo_encuentro/reservas?_limit=100
+http://localhost:8080/club_deportivo_encuentro/reservas?_limit=0
+http://localhost:8080/club_deportivo_encuentro/reservas?_limit=101
+http://localhost:8080/club_deportivo_encuentro/reservas?_offset=0
+http://localhost:8080/club_deportivo_encuentro/reservas?_offset=-1
+http://localhost:8080/club_deportivo_encuentro/reservas?_offset=9999
 
 ESTADO
-http://localhost:8080/reservas?estado=finalizada
-http://localhost:8080/reservas?estado=pendiente
+http://localhost:8080/club_deportivo_encuentro/reservas?estado=finalizada
+http://localhost:8080/club_deportivo_encuentro/reservas?estado=pendiente
 
 FECHAS
-http://localhost:8080/reservas?fecha_desde=2026-10-01&fecha_hasta=2026-10-31
-http://localhost:8080/reservas?fecha_desde=2026-10-31&fecha_hasta=2026-10-01
-http://localhost:8080/reservas?fecha_desde=01-10-2026
-http://localhost:8080/reservas?fecha_desde=2026-10-01
-http://localhost:8080/reservas?fecha_hasta=2026-10-31
+http://localhost:8080/club_deportivo_encuentro/reservas?fecha_desde=2026-10-01&fecha_hasta=2026-10-31
+http://localhost:8080/club_deportivo_encuentro/reservas?fecha_desde=2026-10-31&fecha_hasta=2026-10-01
+http://localhost:8080/club_deportivo_encuentro/reservas?fecha_desde=01-10-2026
+http://localhost:8080/club_deportivo_encuentro/reservas?fecha_desde=2026-10-01
+http://localhost:8080/club_deportivo_encuentro/reservas?fecha_hasta=2026-10-31
 
 IDS
 http://localhost:8080/reservas?id_cancha=999
@@ -28,7 +28,7 @@ http://localhost:8080/reservas?id_socio=999
 http://localhost:8080/reservas?id_cancha=hola
 
 COMBINACION
-http://localhost:8080/reservas?id_cancha=2&id_socio=1&estado=confirmada&fecha_desde=2026-10-01&fecha_hasta=2026-10-31&_limit=5&_offset=0
+http://localhost:8080/club_deportivo_encuentro/reservas?id_cancha=2&id_socio=1&estado=confirmada&fecha_desde=2026-10-01&fecha_hasta=2026-10-31&_limit=5&_offset=0
 
 
 -- POST RESERVAS
@@ -295,7 +295,7 @@ Esperado: 400 — el contrato exige exactamente YYYY-MM-DDTHH:MM:SS.ffffff-03:00
 -- PUT RESERVAS
 Caso 1 - correcto
 URL:
-http://localhost:8080/reservas/{1}/estado
+http://localhost:8080/club_deportivo_encuentro/reservas/{1}/estado
 BODY:
 {
   "estado": "cancelada"
@@ -305,7 +305,7 @@ Esperado: 201
 
 Caso 2: conflicto al cambiar el estado (solo si se cambia a cancelado primero)
 URL:
-http://localhost:8080/reservas/{1}/estado
+http://localhost:8080/club_deportivo_encuentro/reservas/{1}/estado
 BODY:
 {
   "estado": "confirmada"
@@ -315,7 +315,7 @@ Esperado: 409
 
 Caso 3: estado inexistente
 URL:
-http://localhost:8080/reservas/{1}/estado
+http://localhost:8080/club_deportivo_encuentro/reservas/{1}/estado
 BODY:
 {
   "estado": "pendiente"
