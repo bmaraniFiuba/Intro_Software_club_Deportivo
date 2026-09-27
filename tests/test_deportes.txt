@@ -1,0 +1,44 @@
+-----> DEPORTES <----------
+
+-- GET DEPORTES
+URL: http://localhost:8080/club_deportivo_encuentro/deportes
+
+Caso 1 — Listado normal, sin parámetros
+Esperado: 200. Devuelve los 3 deportes precargados (Fútbol, Tenis, Pádel), sin paginación.
+
+Caso 2 — Con un parámetro cualquiera
+URL: http://localhost:8080/club_deportivo_encuentro/deportes?nombre=futbol
+Esperado: 400 — este endpoint no acepta ningún parámetro, ni siquiera uno que "suene" razonable.
+
+Caso 3 — Con parámetros de paginación
+URL: http://localhost:8080/club_deportivo_encuentro/deportes?_limit=1&_offset=0
+Esperado: 400 — /deportes no pagina, según el enunciado.
+
+Caso 4 — Parámetro cualquiera, inventado
+URL: http://localhost:8080/club_deportivo_encuentro/deportes?foo=bar
+Esperado: 400.
+
+
+-- MÉTODOS NO PERMITIDOS
+Caso 5 — POST a /deportes
+URL: http://localhost:8080/club_deportivo_encuentro/deportes
+BODY:
+{
+  "nombre": "Basquet"
+}
+Esperado: 405 — el enunciado dice que los deportes se cargan por script, no por API. Solo existe el método GET para este recurso.
+
+Caso 6 — DELETE a /deportes
+URL: http://localhost:8080/club_deportivo_encuentro/deportes
+Esperado: 405.
+
+Caso 7 — Id que no existe como endpoint
+URL: http://localhost:8080/club_deportivo_encuentro/deportes/1
+Esperado: 404 — no existe un GET /deportes/{id}, el enunciado solo pide el listado completo.
+
+
+-- NOTA
+Si en algún momento borran los 3 deportes de la tabla (no debería pasar en un ambiente
+normal, pero por las dudas):
+Caso 8 — Tabla vacía
+Esperado: 204, arreglo vacío. No debería devolver 200 con "deportes": [].
