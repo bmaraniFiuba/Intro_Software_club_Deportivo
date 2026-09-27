@@ -137,3 +137,21 @@ Con la base de datos levantada y el entorno configurado:
   ```bash
   pipenv run python app.py
   ```
+
+---
+
+## 5. Utilización de los casos de prueba
+
+ACLARACIÓN: nosotros utilizamos postman, las indicaciones dadas serán para este programa
+
+Con la base de datos levantada (junto con sus datos de prueba) y el entorno configurado:
+
+1) Importar el archivo JSON de la carpeta test al programa:
+- File
+- Import
+- Utilice el archivo dado
+
+2) La prueba cuenta con una serie de sub carpetas con los diferentes endpoints y, dentro de ellas, los diferentes métodos con pruebas a realizar
+
+
+En la carpeta test se encuentran los archivos de cada endpont, ahí se especifican los diferentes pruebas cargadas y extras no cargadas, con los resultados esperados.
