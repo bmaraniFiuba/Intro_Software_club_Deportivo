@@ -43,22 +43,6 @@ def validar_formato_fecha(fecha: str, formato: str, nombre: str = 'fecha') -> da
         ))
 
 
-def validar_entero(numero, nombre: str = 'numero') -> int:
-    valor = str(numero)
-    valor_sin_letras = sub('[a-zA-Z]+', '', valor)
-
-    try:
-        return int(valor_sin_letras)
-    except ValueError:
-        logger.warning(f"Valor numerico invalido: '{numero}' no puede convertirse a entero")
-
-        raise ValueError(construir_error_api(
-            code=f'invalid.{nombre}.format',
-            message=f"Formato de '{nombre}' invalido",
-            description=f"El valor '{numero}' no puede convertirse a un numero entero"
-        ))
-
-
 def validar_string_no_vacio(valor, nombre: str) -> str:
     if valor is None or not str(valor).strip():
         raise ValueError(construir_error_api(

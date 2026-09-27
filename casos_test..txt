@@ -1,0 +1,293 @@
+-----> RESERVAS <----------
+
+-- GET RESERVAS
+URLs para testear reservas:
+
+http://localhost:8080/reservas?_limit=1
+http://localhost:8080/reservas?_limit=100
+http://localhost:8080/reservas?_limit=0
+http://localhost:8080/reservas?_limit=101
+http://localhost:8080/reservas?_offset=0
+http://localhost:8080/reservas?_offset=-1
+http://localhost:8080/reservas?_offset=9999
+
+ESTADO
+http://localhost:8080/reservas?estado=finalizada
+http://localhost:8080/reservas?estado=pendiente
+
+FECHAS
+http://localhost:8080/reservas?fecha_desde=2026-10-01&fecha_hasta=2026-10-31
+http://localhost:8080/reservas?fecha_desde=2026-10-31&fecha_hasta=2026-10-01
+http://localhost:8080/reservas?fecha_desde=01-10-2026
+http://localhost:8080/reservas?fecha_desde=2026-10-01
+http://localhost:8080/reservas?fecha_hasta=2026-10-31
+
+IDS
+http://localhost:8080/reservas?id_cancha=999
+http://localhost:8080/reservas?id_socio=999
+http://localhost:8080/reservas?id_cancha=hola
+
+COMBINACION
+http://localhost:8080/reservas?id_cancha=2&id_socio=1&estado=confirmada&fecha_desde=2026-10-01&fecha_hasta=2026-10-31&_limit=5&_offset=0
+
+
+-- POST RESERVAS
+1- 2 horas de reserva 
+{
+  "id_socio": 2,
+  "id_cancha": 1,
+  "fecha_hora_inicio": "2026-10-16T10:00:00.000000-03:00",
+  "fecha_hora_fin": "2026-10-16T12:00:00.000000-03:00"
+}
+Esperado: 201. precio_hora: 800000, precio_total: 1600000, estado: "confirmada".
+
+2- 1 hora de reserva 
+{
+  "id_socio": 4,
+  "id_cancha": 3,
+  "fecha_hora_inicio": "2026-10-16T09:00:00.000000-03:00",
+  "fecha_hora_fin": "2026-10-16T10:00:00.000000-03:00"
+}
+Esperado: 201. Cancha 3 = $500000/h → precio_total: 500000.
+
+
+Caso 4 — Más de 3 horas
+
+{
+  "id_socio": 6,
+  "id_cancha": 5,
+  "fecha_hora_inicio": "2026-10-17T08:00:00.000000-03:00",
+  "fecha_hora_fin": "2026-10-17T12:00:00.000000-03:00"
+}
+Esperado: 400 — supera la duración máxima de 3 horas.
+
+Caso 5 — No empieza/termina en hora en punto
+
+
+{
+  "id_socio": 3,
+  "id_cancha": 1,
+  "fecha_hora_inicio": "2026-10-17T10:15:00.000000-03:00",
+  "fecha_hora_fin": "2026-10-17T11:15:00.000000-03:00"
+}
+Esperado: 400 — las reservas deben comenzar y terminar en horas en punto.
+
+Caso 6 — Inicio y fin iguales
+
+
+{
+  "id_socio": 3,
+  "id_cancha": 1,
+  "fecha_hora_inicio": "2026-10-17T10:00:00.000000-03:00",
+  "fecha_hora_fin": "2026-10-17T10:00:00.000000-03:00"
+}
+
+Esperado: 400 — no se cumple inicio < fin.
+
+Caso 7 — Fin anterior al inicio
+
+{
+  "id_socio": 3,
+  "id_cancha": 1,
+  "fecha_hora_inicio": "2026-10-17T12:00:00.000000-03:00",
+  "fecha_hora_fin": "2026-10-17T10:00:00.000000-03:00"
+}
+
+Esperado: 400.
+
+3. Horario del club (08:00–23:00) y medianoche
+
+Caso 8 — Empieza antes de la apertura
+
+{
+  "id_socio": 2,
+  "id_cancha": 2,
+  "fecha_hora_inicio": "2026-10-17T07:00:00.000000-03:00",
+  "fecha_hora_fin": "2026-10-17T09:00:00.000000-03:00"
+}
+
+Esperado: 400.
+
+Caso 9 — Cruza la medianoche / termina después del cierre
+
+{
+  "id_socio": 2,
+  "id_cancha": 2,
+  "fecha_hora_inicio": "2026-10-17T23:00:00.000000-03:00",
+  "fecha_hora_fin": "2026-10-18T01:00:00.000000-03:00"
+}
+
+Esperado: 400 — la reserva no puede atravesar la medianoche.
+
+Caso 10 — Borde exacto de apertura (válido)
+{
+  "id_socio": 3,
+  "id_cancha": 3,
+  "fecha_hora_inicio": "2026-10-18T08:00:00.000000-03:00",
+  "fecha_hora_fin": "2026-10-18T09:00:00.000000-03:00"
+}
+
+Esperado: 201.
+
+Caso 11 — Borde exacto de cierre (válido)
+{
+  "id_socio": 1,
+  "id_cancha": 3,
+  "fecha_hora_inicio": "2026-10-18T22:00:00.000000-03:00",
+  "fecha_hora_fin": "2026-10-18T23:00:00.000000-03:00"
+}
+
+Esperado: 201.
+
+
+Caso 12 — Fecha en el pasado
+{
+  "id_socio": 1,
+  "id_cancha": 1,
+  "fecha_hora_inicio": "2026-09-10T10:00:00.000000-03:00",
+  "fecha_hora_fin": "2026-09-10T11:00:00.000000-03:00"
+}
+
+Esperado: 400.
+
+
+
+Caso 13 — Socio que no existe
+{
+  "id_socio": 9999,
+  "id_cancha": 1,
+  "fecha_hora_inicio": "2026-10-18T10:00:00.000000-03:00",
+  "fecha_hora_fin": "2026-10-18T11:00:00.000000-03:00"
+}
+
+Esperado: 404.
+
+Caso 14 — Cancha que no existe
+
+{
+  "id_socio": 1,
+  "id_cancha": 9999,
+  "fecha_hora_inicio": "2026-10-18T10:00:00.000000-03:00",
+  "fecha_hora_fin": "2026-10-18T11:00:00.000000-03:00"
+}
+
+Esperado: 404.
+
+
+Caso 15 — Cancha inactiva (la cancha 4, "Tenis 2", ya está activa: false)
+
+{
+  "id_socio": 2,
+  "id_cancha": 4,
+  "fecha_hora_inicio": "2026-10-18T10:00:00.000000-03:00",
+  "fecha_hora_fin": "2026-10-18T11:00:00.000000-03:00"
+}
+
+Esperado: error 404 
+
+Caso 16 — Intervalo idéntico
+
+{
+  "id_socio": 2,
+  "id_cancha": 3,
+  "fecha_hora_inicio": "2026-10-15T18:00:00.000000-03:00",
+  "fecha_hora_fin": "2026-10-15T20:00:00.000000-03:00"
+}
+
+Caso 18 — Solapamiento parcial
+
+{
+  "id_socio": 2,
+  "id_cancha": 3,
+  "fecha_hora_inicio": "2026-10-15T19:00:00.000000-03:00",
+  "fecha_hora_fin": "2026-10-15T21:00:00.000000-03:00"
+}
+
+
+Caso 19 — Intervalo contenido dentro de otro
+{
+  "id_socio": 2,
+  "id_cancha": 3,
+  "fecha_hora_inicio": "2026-10-15T19:00:00.000000-03:00",
+  "fecha_hora_fin": "2026-10-15T20:00:00.000000-03:00"
+}
+
+
+Caso 21 — Consecutiva (NO debe rechazarse)
+{
+  "id_socio": 2,
+  "id_cancha": 3,
+  "fecha_hora_inicio": "2026-10-15T20:00:00.000000-03:00",
+  "fecha_hora_fin": "2026-10-15T21:00:00.000000-03:00"
+}
+Esperado: 201 — empieza justo cuando termina la otra, no hay superposición.
+
+
+Caso 22 — Mismo socio, otra cancha, horario superpuesto
+
+{
+  "id_socio": 5,
+  "id_cancha": 5,
+  "fecha_hora_inicio": "2026-10-15T19:00:00.000000-03:00",
+  "fecha_hora_fin": "2026-10-15T20:00:00.000000-03:00"
+}
+
+ ERROR, un socio no puede tener dos reservas confirmadas superpuestas, ni siquiera en canchas distintas.
+
+Caso 23 — Campo faltante
+{
+  "id_socio": 1,
+  "id_cancha": 1,
+  "fecha_hora_inicio": "2026-10-19T10:00:00.000000-03:00"
+}
+Esperado: 400.
+
+Caso 24 — Body vacío
+{}
+Esperado: 400.
+
+
+Caso 25 — Tipo incorrecto
+{
+  "id_socio": "1",
+  "id_cancha": 1,
+  "fecha_hora_inicio": "2026-10-19T10:00:00.000000-03:00",
+  "fecha_hora_fin": "2026-10-19T11:00:00.000000-03:00"
+}
+
+Esperado: 400.
+
+Caso 26 — Id negativo o cero
+
+
+{
+  "id_socio": 1,
+  "id_cancha": -1,
+  "fecha_hora_inicio": "2026-10-19T10:00:00.000000-03:00",
+  "fecha_hora_fin": "2026-10-19T11:00:00.000000-03:00"
+}
+
+Esperado: 400 (o 404, según lo definas — la convención dice "enteros positivos").
+
+Caso 27 — Fecha sin el offset -03:00 fijo (ej. "Z")
+
+
+{
+  "id_socio": 1,
+  "id_cancha": 1,
+  "fecha_hora_inicio": "2026-10-19T10:00:00Z",
+  "fecha_hora_fin": "2026-10-19T11:00:00Z"
+}
+
+Esperado: 400 — el contrato exige exactamente YYYY-MM-DDTHH:MM:SS.ffffff-03:00.
+
+
+--Caso 28 — Intenta pisar estado, tarifa o total
+{
+  "id_socio": 1,
+  "id_cancha": 1,
+  "fecha_hora_inicio": "2026-10-19T10:00:00.000000-03:00",
+  "fecha_hora_fin": "2026-10-19T11:00:00.000000-03:00",
+  "estado": "finalizada",
+  "precio_total": 1
+}
