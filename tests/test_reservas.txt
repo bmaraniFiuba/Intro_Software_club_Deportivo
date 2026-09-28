@@ -334,3 +334,17 @@ ESPERADOS CODIGOS 200
 CASOS DE ERROR
 /club_deportivo_encuentro/reservas/9999
 /club_deportivo_encuentro/reservas/0
+
+--------------- PUT RESERVAS --------------
+si la cancha 5 esta en confirmada al levantar la base: estado 200
+http://localhost:8080/club_deportivo_encuentro/reservas/5/estado
+{
+  "estado" : cancelada
+}
+
+despues de cancelarla:
+http://localhost:8080/club_deportivo_encuentro/reservas/5/estado
+{
+  "estado" : "confirmada"
+}
+error no se puede cancelar y despues confirmar
