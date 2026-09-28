@@ -1,0 +1,2025 @@
+{
+	"info": {
+		"_postman_id": "9a94a2e4-3aa0-4bd8-be5b-ce3a6a32efee",
+		"name": "Club_deportivo_test",
+		"description": "# 🚀 Get started here\n\nThis template guides you through CRUD operations (GET, POST, PUT, DELETE), variables, and tests.\n\n## 🔖 **How to use this template**\n\n#### **Step 1: Send requests**\n\nRESTful APIs allow you to perform CRUD operations using the POST, GET, PUT, and DELETE HTTP methods.\n\nThis collection contains each of these [request](https://learning.postman.com/docs/sending-requests/requests/) types. Open each request and click \"Send\" to see what happens.\n\n#### **Step 2: View responses**\n\nObserve the response tab for status code (200 OK), response time, and size.\n\n#### **Step 3: Send new Body data**\n\nUpdate or add new data in \"Body\" in the POST request. Typically, Body data is also used in PUT request.\n\n```\n{\n    \"name\": \"Add your name in the body\"\n}\n\n ```\n\n#### **Step 4: Update the variable**\n\nVariables enable you to store and reuse values in Postman. We have created a [variable](https://learning.postman.com/docs/sending-requests/variables/) called `base_url` with the sample request [https://postman-api-learner.glitch.me](https://postman-api-learner.glitch.me). Replace it with your API endpoint to customize this collection.\n\n#### **Step 5: Add tests in the \"Scripts\" tab**\n\nAdding tests to your requests can help you confirm that your API is working as expected. You can write test scripts in JavaScript and view the output in the \"Test Results\" tab.\n\n<img src=\"https://content.pstmn.io/fa30ea0a-373d-4545-a668-e7b283cca343/aW1hZ2UucG5n\" alt=\"\" height=\"1530\" width=\"2162\">\n\n## 💪 Pro tips\n\n- Use folders to group related requests and organize the collection.\n    \n- Add more [scripts](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/) to verify if the API works as expected and execute workflows.\n    \n\n## 💡Related templates\n\n[API testing basics](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9a37a28-055b-49cd-8c7e-97494a21eb54&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[API documentation](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9c28f47-1253-44af-a2f3-20dce4da1f18&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[Authorization methods](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=31a9a6ed-4cdf-4ced-984c-d12c9aec1c27&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "58477081",
+		"_collection_link": "https://cdaglio1806-5752715.postman.co/workspace/Cristian-N.-Daglio's-Workspace~017ba62b-dbe5-482b-855e-c58572737564/collection/58477081-9a94a2e4-3aa0-4bd8-be5b-ce3a6a32efee?action=share&source=collection_link&creator=58477081"
+	},
+	"item": [
+		{
+			"name": "Socios",
+			"item": [
+				{
+					"name": "GET",
+					"item": [
+						{
+							"name": "limit",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/socios?_limit=1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"socios"
+									],
+									"query": [
+										{
+											"key": "_limit",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "offset",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/socios?_offset=0",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"socios"
+									],
+									"query": [
+										{
+											"key": "_offset",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "por_nombre",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/socios?nombre=MARANI",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"socios"
+									],
+									"query": [
+										{
+											"key": "nombre",
+											"value": "MARANI"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "por_activo",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/socios?activo=true",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"socios"
+									],
+									"query": [
+										{
+											"key": "activo",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "por_parametro_desconocido",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/socios?telefono=123",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"socios"
+									],
+									"query": [
+										{
+											"key": "telefono",
+											"value": "123"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "combinacion",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/socios?nombre=a&activo=true&_limit=5&_offset=0",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"socios"
+									],
+									"query": [
+										{
+											"key": "nombre",
+											"value": "a"
+										},
+										{
+											"key": "activo",
+											"value": "true"
+										},
+										{
+											"key": "_limit",
+											"value": "5"
+										},
+										{
+											"key": "_offset",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "por_id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/socios/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"socios",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Método GET: lista los socios"
+				},
+				{
+					"name": "POST",
+					"item": [
+						{
+							"name": "correcto",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"nombre\": \"Perez, Juan\",\n  \"email\": \"jperez@fi.uba.ar\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/socios",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"socios"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "email_repetido",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"nombre\": \"Otro Marani\",\n  \"email\": \"bmarani@fi.uba.ar\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/socios",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"socios"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "sin_nombre",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"nombre\": \"   \",\n  \"email\": \"nuevo@fi.uba.ar\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/socios",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"socios"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "email_invalido",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"nombre\": \"Test Formato\",\n  \"email\": \"no-es-un-email\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/socios",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"socios"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "faltante_campos",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"nombre\": \"Falta Email\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/socios",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"socios"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "desconocido",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"nombre\": \"Con Telefono\",\n  \"email\": \"contelefono@fi.uba.ar\",\n  \"telefono\": \"1122334455\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/socios",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"socios"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Método POST: crear un socio"
+				},
+				{
+					"name": "PATCH",
+					"item": [
+						{
+							"name": "nombre",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"nombre\": \"Daglio, Cristian Ariel\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/socios/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"socios",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "activo",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"activo\": false\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/socios/3",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"socios",
+										"3"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "email_duplicado",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"bmarani@fi.uba.ar\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/socios/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"socios",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "mismo_email",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"bmarani@fi.uba.ar\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/socios/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"socios",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "vacio",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/socios/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"socios",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "desconocido",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": 55\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/socios/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"socios",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Método PATCH: modifica un dato del socio"
+				}
+			],
+			"description": "Esta carpeta cuenta con los diferentes métodos para poder probar los endpoints de socios. Dentro se encuentra distinguido por tipo de método HTTP, con sus respectivos casos de prueba."
+		},
+		{
+			"name": "Canchas",
+			"item": [
+				{
+					"name": "GET",
+					"item": [
+						{
+							"name": "limit",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/canchas?_limit=1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"canchas"
+									],
+									"query": [
+										{
+											"key": "_limit",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "oofset",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/canchas?_offset=-1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"canchas"
+									],
+									"query": [
+										{
+											"key": "_offset",
+											"value": "-1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "deporte",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/canchas?id_deporte=2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"canchas"
+									],
+									"query": [
+										{
+											"key": "id_deporte",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "techada",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/canchas?techada=false",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"canchas"
+									],
+									"query": [
+										{
+											"key": "techada",
+											"value": "false"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "activa",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/canchas?activa=true",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"canchas"
+									],
+									"query": [
+										{
+											"key": "activa",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "combinacion",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/canchas?id_deporte=1&techada=true&activa=true&_limit=5&_offset=0",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"canchas"
+									],
+									"query": [
+										{
+											"key": "id_deporte",
+											"value": "1"
+										},
+										{
+											"key": "techada",
+											"value": "true"
+										},
+										{
+											"key": "activa",
+											"value": "true"
+										},
+										{
+											"key": "_limit",
+											"value": "5"
+										},
+										{
+											"key": "_offset",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "por_id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/canchas/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"canchas",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "disponibles",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/canchas/disponibles?fecha=2026-10-16&hora_inicio=10:00:00&hora_fin=11:00:00",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"canchas",
+										"disponibles"
+									],
+									"query": [
+										{
+											"key": "fecha",
+											"value": "2026-10-16"
+										},
+										{
+											"key": "hora_inicio",
+											"value": "10:00:00"
+										},
+										{
+											"key": "hora_fin",
+											"value": "11:00:00"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "disponibles_con_parametros",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/canchas/disponibles?fecha=2026-10-16&hora_inicio=10:00:00&hora_fin=11:00:00&id_deporte=1&techada=true",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"canchas",
+										"disponibles"
+									],
+									"query": [
+										{
+											"key": "fecha",
+											"value": "2026-10-16"
+										},
+										{
+											"key": "hora_inicio",
+											"value": "10:00:00"
+										},
+										{
+											"key": "hora_fin",
+											"value": "11:00:00"
+										},
+										{
+											"key": "id_deporte",
+											"value": "1"
+										},
+										{
+											"key": "techada",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "superposicion",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/canchas/disponibles?fecha=2026-10-15&hora_inicio=18:00:00&hora_fin=19:00:00&id_deporte=2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"canchas",
+										"disponibles"
+									],
+									"query": [
+										{
+											"key": "fecha",
+											"value": "2026-10-15"
+										},
+										{
+											"key": "hora_inicio",
+											"value": "18:00:00"
+										},
+										{
+											"key": "hora_fin",
+											"value": "19:00:00"
+										},
+										{
+											"key": "id_deporte",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Método GET: lista las canchas"
+				},
+				{
+					"name": "POST",
+					"item": [
+						{
+							"name": "correcto",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"nombre\": \"Cancha Fútbol 5\",\n  \"id_deporte\": 1,\n  \"precio_hora\": 900000,\n  \"techada\": true,\n  \"activa\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/canchas",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"canchas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "faltante",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id_deporte\":1,\n    \"precio_hora\":800000\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/canchas",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"canchas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "campos_valores_invalidos",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"nombre\":\"Deporte inexistente\",\n    \"id_deporte\":999,\n    \"precio_hora\":800000\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/canchas",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"canchas"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Método POST: crear una cancha"
+				},
+				{
+					"name": "PATCH",
+					"item": [
+						{
+							"name": "cambiar_nombre",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"nombre\":\"Cancha Fútbol 1 Renovada\"}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/canchas/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"canchas",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "cambiar_precio",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"precio_hora\":850000}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/canchas/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"canchas",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "cambiar_techada_activa",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"techada\":true,\n    \"activa\":false\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/canchas/3",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"canchas",
+										"3"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "combinacion",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"nombre\":\"Cancha Pádel Renovada\",\n    \"precio_hora\":750000,\n    \"techada\":false,\n    \"activa\":true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/canchas/5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"canchas",
+										"5"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Método PATCH: modificar parametros de la cancha"
+				},
+				{
+					"name": "DELETE",
+					"item": [
+						{
+							"name": "correcto",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/canchas/{id_devuelto}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"canchas",
+										"{id_devuelto}"
+									]
+								},
+								"description": "Previo a esta ejecución, crear una nueva cancha."
+							},
+							"response": []
+						},
+						{
+							"name": "conflicto",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/canchas/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"canchas",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Método DELETE: eliminar cancha"
+				}
+			],
+			"description": "Esta carpeta cuenta con los diferentes métodos para poder probar los endpoints de canchas. Dentro se encuentra distinguido por tipo de método HTTP, con sus respectivos casos de prueba."
+		},
+		{
+			"name": "Reservas",
+			"item": [
+				{
+					"name": "GET",
+					"item": [
+						{
+							"name": "limit",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/reservas?_limit=1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"reservas"
+									],
+									"query": [
+										{
+											"key": "_limit",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "offset",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/reservas?_offset=0",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"reservas"
+									],
+									"query": [
+										{
+											"key": "_offset",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "estado",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/reservas?estado=finalizada",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"reservas"
+									],
+									"query": [
+										{
+											"key": "estado",
+											"value": "finalizada"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "fechas_desde_hasta",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/reservas?fecha_desde=2026-10-01&fecha_hasta=2026-10-31",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"reservas"
+									],
+									"query": [
+										{
+											"key": "fecha_desde",
+											"value": "2026-10-01"
+										},
+										{
+											"key": "fecha_hasta",
+											"value": "2026-10-31"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "fechas_hasta",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/reservas?fecha_desde=2026-10-01",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"reservas"
+									],
+									"query": [
+										{
+											"key": "fecha_desde",
+											"value": "2026-10-01"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/reservas?id_cancha=999",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"reservas"
+									],
+									"query": [
+										{
+											"key": "id_cancha",
+											"value": "999"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "combinacion",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/reservas?id_cancha=2&id_socio=1&estado=confirmada&fecha_desde=2026-10-01&fecha_hasta=2026-10-31&_limit=5&_offset=0",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"reservas"
+									],
+									"query": [
+										{
+											"key": "id_cancha",
+											"value": "2"
+										},
+										{
+											"key": "id_socio",
+											"value": "1"
+										},
+										{
+											"key": "estado",
+											"value": "confirmada"
+										},
+										{
+											"key": "fecha_desde",
+											"value": "2026-10-01"
+										},
+										{
+											"key": "fecha_hasta",
+											"value": "2026-10-31"
+										},
+										{
+											"key": "_limit",
+											"value": "5"
+										},
+										{
+											"key": "_offset",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Método GET: lista las reservas"
+				},
+				{
+					"name": "POST",
+					"item": [
+						{
+							"name": "correcto",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id_socio\": 2,\n  \"id_cancha\": 1,\n  \"fecha_hora_inicio\": \"2026-10-16T10:00:00.000000-03:00\",\n  \"fecha_hora_fin\": \"2026-10-16T12:00:00.000000-03:00\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "/club_deportivo_encuentro/reservas",
+									"path": [
+										"club_deportivo_encuentro",
+										"reservas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "tiempo_excedido",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id_socio\": 6,\n  \"id_cancha\": 5,\n  \"fecha_hora_inicio\": \"2026-10-17T08:00:00.000000-03:00\",\n  \"fecha_hora_fin\": \"2026-10-17T12:00:00.000000-03:00\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "/club_deportivo_encuentro/reservas",
+									"path": [
+										"club_deportivo_encuentro",
+										"reservas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "hora_no_punto",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id_socio\": 3,\n  \"id_cancha\": 1,\n  \"fecha_hora_inicio\": \"2026-10-17T10:15:00.000000-03:00\",\n  \"fecha_hora_fin\": \"2026-10-17T11:15:00.000000-03:00\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "/club_deportivo_encuentro/reservas",
+									"path": [
+										"club_deportivo_encuentro",
+										"reservas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "inicio=fin",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id_socio\": 3,\n  \"id_cancha\": 1,\n  \"fecha_hora_inicio\": \"2026-10-17T10:00:00.000000-03:00\",\n  \"fecha_hora_fin\": \"2026-10-17T10:00:00.000000-03:00\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "/club_deportivo_encuentro/reservas",
+									"path": [
+										"club_deportivo_encuentro",
+										"reservas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "fin<inicio",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id_socio\": 3,\n  \"id_cancha\": 1,\n  \"fecha_hora_inicio\": \"2026-10-17T12:00:00.000000-03:00\",\n  \"fecha_hora_fin\": \"2026-10-17T10:00:00.000000-03:00\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "/club_deportivo_encuentro/reservas",
+									"path": [
+										"club_deportivo_encuentro",
+										"reservas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "previo_apertura",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id_socio\": 2,\n  \"id_cancha\": 2,\n  \"fecha_hora_inicio\": \"2026-10-17T07:00:00.000000-03:00\",\n  \"fecha_hora_fin\": \"2026-10-17T09:00:00.000000-03:00\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "/club_deportivo_encuentro/reservas",
+									"path": [
+										"club_deportivo_encuentro",
+										"reservas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "post_cierre",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id_socio\": 2,\n  \"id_cancha\": 2,\n  \"fecha_hora_inicio\": \"2026-10-17T23:00:00.000000-03:00\",\n  \"fecha_hora_fin\": \"2026-10-18T01:00:00.000000-03:00\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "/club_deportivo_encuentro/reservas",
+									"path": [
+										"club_deportivo_encuentro",
+										"reservas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "caso_border",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id_socio\": 3,\n  \"id_cancha\": 3,\n  \"fecha_hora_inicio\": \"2026-10-18T08:00:00.000000-03:00\",\n  \"fecha_hora_fin\": \"2026-10-18T09:00:00.000000-03:00\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "/club_deportivo_encuentro/reservas",
+									"path": [
+										"club_deportivo_encuentro",
+										"reservas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "fecha_pasada",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id_socio\": 1,\n  \"id_cancha\": 1,\n  \"fecha_hora_inicio\": \"2026-09-10T10:00:00.000000-03:00\",\n  \"fecha_hora_fin\": \"2026-09-10T11:00:00.000000-03:00\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "/club_deportivo_encuentro/reservas",
+									"path": [
+										"club_deportivo_encuentro",
+										"reservas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "inexistencia",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id_socio\": 9999,\n  \"id_cancha\": 1,\n  \"fecha_hora_inicio\": \"2026-10-18T10:00:00.000000-03:00\",\n  \"fecha_hora_fin\": \"2026-10-18T11:00:00.000000-03:00\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "/club_deportivo_encuentro/reservas",
+									"path": [
+										"club_deportivo_encuentro",
+										"reservas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "superposicion",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id_socio\": 2,\n  \"id_cancha\": 3,\n  \"fecha_hora_inicio\": \"2026-10-15T18:00:00.000000-03:00\",\n  \"fecha_hora_fin\": \"2026-10-15T20:00:00.000000-03:00\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "/club_deportivo_encuentro/reservas",
+									"path": [
+										"club_deportivo_encuentro",
+										"reservas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "socio_doble_reserva",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id_socio\": 5,\n  \"id_cancha\": 5,\n  \"fecha_hora_inicio\": \"2026-10-15T19:00:00.000000-03:00\",\n  \"fecha_hora_fin\": \"2026-10-15T20:00:00.000000-03:00\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "/club_deportivo_encuentro/reservas",
+									"path": [
+										"club_deportivo_encuentro",
+										"reservas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "campo_faltante",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id_socio\": 1,\n  \"id_cancha\": 1,\n  \"fecha_hora_inicio\": \"2026-10-19T10:00:00.000000-03:00\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "/club_deportivo_encuentro/reservas",
+									"path": [
+										"club_deportivo_encuentro",
+										"reservas"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Método POST: crear una reserva"
+				},
+				{
+					"name": "PUT",
+					"item": [
+						{
+							"name": "correcto",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"estado\": \"cancelada\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/reservas/{1}/estado",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"reservas",
+										"{1}",
+										"estado"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "conflicto",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"estado\": \"confirmada\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/reservas/{1}/estado",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"reservas",
+										"{1}",
+										"estado"
+									]
+								},
+								"description": "Genera un conflicto si se ultiliza luego de haber movido la reserva a cancelada"
+							},
+							"response": []
+						},
+						{
+							"name": "desconocido",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"estado\": \"pendiente\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/reservas/{2}/estado",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"reservas",
+										"{2}",
+										"estado"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Método PUT: establece el estado de una reserva"
+				}
+			],
+			"description": "Esta carpeta cuenta con los diferentes métodos para poder probar los endpoints de reservas. Dentro se encuentra distinguido por tipo de método HTTP, con sus respectivos casos de prueba."
+		},
+		{
+			"name": "Deportes",
+			"item": [
+				{
+					"name": "GET",
+					"item": [
+						{
+							"name": "correcto",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "ttp://localhost:8080/club_deportivo_encuentro/deportes",
+									"protocol": "ttp",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"deportes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "con_nombre",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/deportes?nombre=futbol",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"deportes"
+									],
+									"query": [
+										{
+											"key": "nombre",
+											"value": "futbol"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "limit_offset",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/deportes?_limit=1&_offset=0",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"deportes"
+									],
+									"query": [
+										{
+											"key": "_limit",
+											"value": "1"
+										},
+										{
+											"key": "_offset",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "inventado",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/deportes?foo=bar",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"deportes"
+									],
+									"query": [
+										{
+											"key": "foo",
+											"value": "bar"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "por_id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/deportes/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"deportes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Método GET: lista los deportes"
+				},
+				{
+					"name": "POST",
+					"item": [
+						{
+							"name": "invalido",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"nombre\": \"Basquet\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/deportes",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"deportes"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Método POST: no permitido"
+				},
+				{
+					"name": "DELETE",
+					"item": [
+						{
+							"name": "invalido",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/club_deportivo_encuentro/deportes",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"club_deportivo_encuentro",
+										"deportes"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Método DELETE: no permitido"
+				}
+			],
+			"description": "Esta carpeta cuenta con los diferentes métodos para poder probar los endpoints de deportes. Dentro se encuentra distinguido por tipo de método HTTP, con sus respectivos casos de prueba."
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "id",
+			"value": "1"
+		},
+		{
+			"key": "base_url",
+			"value": "https://template.postman-echo.com"
+		}
+	]
+}
