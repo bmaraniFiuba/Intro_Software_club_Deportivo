@@ -322,3 +322,15 @@ BODY:
 }
 
 Esperado: 400
+
+
+----------- GET RESERVAS POR ID ----------------------------
+
+ESPERADOS CODIGOS 200
+ /club_deportivo_encuentro/reservas/1
+ /club_deportivo_encuentro/reservas/2
+ /club_deportivo_encuentro/reservas/3
+
+CASOS DE ERROR
+/club_deportivo_encuentro/reservas/9999
+/club_deportivo_encuentro/reservas/0
